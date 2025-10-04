@@ -1,0 +1,13 @@
+@import url('style.css');
+
+
+.chatbot-hero {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: var(--secondary-color); 
+    color: white;
+    padding: 20px;
+}
