@@ -1,13 +1,107 @@
-@import url('style.css');
+/* Importing the DM Sans font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
-
-.chatbot-hero {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background: var(--secondary-color); 
-    color: white;
-    padding: 20px;
+* {
+  margin: 0;
+  padding: 0; 
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
 }
+
+:root {
+  /* Primary color scheme */
+  --primary-color: #1c1a42; /* Indigo-600 */
+  --secondary-color:  #3a1e8c; /* Purple-600 */
+  --primary-color-light: #A5B4FC; /* Indigo-300 */
+  --primary-color-dark: linear-gradient(to bottom, #1a237e, #4a148c); /* Indigo-800 */
+  --text-color: #acb5c9; /* Gray-900 */
+  --background-color: linear-gradient(to bottom, #1a237e, #4a148c); /* Gray-50 */
+  --border-color: #E5E7EB; /* Gray-200 */
+  --white-color: #ffffff; /* White */
+  --black-color: #000000; /* Black */
+  
+  /* font sizes */
+  --font-size-s: 0.9rem; /* 14px */
+  --font-size-n: 1rem;   /* 16px */
+  --font-size-m: 1.12rem; /* 18px */
+  --font-size-l: 1.5rem; /* 20px */
+  --font-size-xl: 2rem; /* 32px */
+  --font-size-2xl: 2.3rem; /* 48px */
+  --font-size-3xl: 3rem; /* 64px */
+  --font-size-4xl: 3.75rem; /* 80px */
+  --font-size-5xl: 4.5rem; /* 96px */
+  --font-size-6xl: 6rem; /* 128px */
+  --font-size-7xl: 8rem; /* 144px */
+  --font-size-8xl: 9rem; /* 192px */
+
+    /* font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --font-weight-extra-bold: 700;
+
+  /* border radius */
+  --border-radius-s: 8px; /* 2px */
+  --border-radius-m: 30px; 
+  --border-radius-circle: 50%; /* 4px */
+
+  /* site max width */
+  --site-max-width: 1300px;
+}
+
+body {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   height:  100vh;
+   background: var(--background-color);
+   margin: 0 20px;
+}
+
+.chat-bar{
+    display: flex;
+    align-items: center;
+    width: 100;
+    max-width: 700px;
+    background: var(--black-color);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 50px;
+    padding: 10px 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.chatbot-hero{
+    text-align: center;
+    color: var(--white-color);
+    margin-bottom: 20px;
+}
+
+.chat-input{
+    flex: 1;
+    background: #000000;
+    border: none;
+    outline: none;
+    padding: 10px 15px;
+    border-radius: 25px;
+    color: var(--white-color);
+    font-size: x-large;
+    margin: 0 10px;
+    transition: background 0.3s ease;
+}
+
+.send-button{
+    background-color: var(--white-color);
+    border: none;
+    color: var(--black-color);
+    font-size: 18px;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s transform 0.2s;
+}
+
