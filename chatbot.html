@@ -5,28 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="chatbot.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-
-
     <title>Chatbot Page</title>
 </head>
 <body>
-    <section class="chatbot-hero">
-        <h1>Hello, <br> how can I help you today with your case?</h1>
-    </section>
 
-    
-    <div class ="chat-bar"> 
-        <i class ="fa-solid fa-plus" title="Attach"></i>
+    <header>
+    <nav class="navbar">
+       <a href = "#" class = "nav-logo"> <h2 class = "logo-text"> MyMckenzie </h2></a>
+    </nav>
+    </header>
 
-        <input type= "text" class="chat-input" placeholder="Tell me about your case..." />
 
-        <!-- send button -->
-         <button class ="send-button" title="Send">
-            <i class = "fa-solid fa-arrow-right" title="Send"></i> 
-        </button>
-          
-    
+
+
+    <div class="chat-container centered">
+        <div class="welcome-section">
+            <h1 class="title">Ask MyMckenzie</h1>
+        </div>
+        
+        <div class="chat-box">
+            <div class="messages"></div>
+            
+            <div class="chat-bar"> 
+                <!-- attach button -->
+                <button class="attach-button" title="Attach">
+                    <i class="fa-solid fa-plus" title="Attach"></i>
+                </button>
+                <textarea class="chat-input" placeholder=""></textarea>
+                <!-- send button -->
+                <button class="send-button" title="Send">
+                    <i class="fa-solid fa-arrow-right" title="Send"></i> 
+                </button>
+            </div>
+        </div>
     </div>
-
+    <script src="chatbot.js"></script>
 </body>
 </html>
+

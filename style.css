@@ -12,11 +12,11 @@
 :root {
   /* Primary color scheme */
   --primary-color: #1c1a42; /* Indigo-600 */
-  --secondary-color:  #3a1e8c; /* Purple-600 */
+  --secondary-color:  #270427; /* Purple-600 */
   --primary-color-light: #A5B4FC; /* Indigo-300 */
-  --primary-color-dark: linear-gradient(to bottom, #1a237e, #4a148c); /* Indigo-800 */
+  --primary-color-dark: #270427; /* Indigo-800 */
   --text-color: #acb5c9; /* Gray-900 */
-  --background-color: linear-gradient(to bottom, #1a237e, #4a148c); /* Gray-50 */
+  --background-color: #270427; /* Gray-50 */
   --border-color: #E5E7EB; /* Gray-200 */
   --white-color: #ffffff; /* White */
   --black-color: #000000; /* Black */
@@ -79,7 +79,6 @@ header .navbar {
   padding: 15px 30px;
   align-items: center;
   justify-content: space-between;
-  
   position: fixed;
   top: 0;
   width: 100%;
@@ -100,6 +99,7 @@ header .navbar.scrolled {
 }
 
 .navbar .nav-logo .logo-text {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   color: var(--white-color);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold)
@@ -148,6 +148,7 @@ header .navbar.scrolled {
 
 .hero-section .title {
   font-size: var(--font-size-6xl);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   font-weight: var(--font-weight-bold);
 }
 

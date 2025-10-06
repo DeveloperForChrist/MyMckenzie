@@ -9,99 +9,154 @@
 }
 
 :root {
-  /* Primary color scheme */
-  --primary-color: #1c1a42; /* Indigo-600 */
-  --secondary-color:  #3a1e8c; /* Purple-600 */
-  --primary-color-light: #A5B4FC; /* Indigo-300 */
-  --primary-color-dark: linear-gradient(to bottom, #1a237e, #4a148c); /* Indigo-800 */
-  --text-color: #acb5c9; /* Gray-900 */
-  --background-color: linear-gradient(to bottom, #1a237e, #4a148c); /* Gray-50 */
-  --border-color: #E5E7EB; /* Gray-200 */
-  --white-color: #ffffff; /* White */
-  --black-color: #000000; /* Black */
-  
-  /* font sizes */
-  --font-size-s: 0.9rem; /* 14px */
-  --font-size-n: 1rem;   /* 16px */
-  --font-size-m: 1.12rem; /* 18px */
-  --font-size-l: 1.5rem; /* 20px */
-  --font-size-xl: 2rem; /* 32px */
-  --font-size-2xl: 2.3rem; /* 48px */
-  --font-size-3xl: 3rem; /* 64px */
-  --font-size-4xl: 3.75rem; /* 80px */
-  --font-size-5xl: 4.5rem; /* 96px */
-  --font-size-6xl: 6rem; /* 128px */
-  --font-size-7xl: 8rem; /* 144px */
-  --font-size-8xl: 9rem; /* 192px */
+  /* Color theme */
+  --primary-color: #1c1a42;
+  --secondary-color: #270427;
+  --primary-color-light: #A5B4FC;
+  --primary-color-dark: #270427;
+  --text-color: #acb5c9;
+  --background-color: #270427;
+  --border-color: #E5E7EB;
+  --white-color: #ffffff;
+  --black-color: #000000;
 
-    /* font weights */
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-bold: 600;
-  --font-weight-extra-bold: 700;
+  /* Font sizes */
+  --font-size-s: 0.9rem;
+  --font-size-n: 1rem;
+  --font-size-l: 1.1rem;
+  --font-size-xl: 2rem;
+  --font-size-3xl: 3rem;
 
-  /* border radius */
-  --border-radius-s: 8px; /* 2px */
-  --border-radius-m: 30px; 
-  --border-radius-circle: 50%; /* 4px */
-
-  /* site max width */
-  --site-max-width: 1300px;
+  /* Border radius */
+  --border-radius-m: 20px;
+  --border-radius-circle: 50%;
 }
 
 body {
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
-   align-items: center;
-   height:  100vh;
-   background: var(--background-color);
-   margin: 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: var(--background-color);
 }
 
-.chat-bar{
-    display: flex;
-    align-items: center;
-    width: 100;
-    max-width: 700px;
-    background: var(--black-color);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 50px;
-    padding: 10px 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+.title {
+  color: var(--white-color);
+  font-size: var(--font-size-3xl);
+  margin-bottom: 20px;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  width: 100%;
 }
 
-.chatbot-hero{
-    text-align: center;
-    color: var(--white-color);
-    margin-bottom: 20px;
+/* ✅ Chat bar styled like ChatGPT */
+.chat-bar {
+  display: flex;
+  align-items: flex-end; /* Input aligns neatly with buttons */
+  justify-content: center;
+  width: 100%;
+  max-width: 750px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius-m);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 8px 12px;
+  margin-top: 10px;
 }
 
-.chat-input{
-    flex: 1;
-    background: #000000;
-    border: none;
-    outline: none;
-    padding: 10px 15px;
-    border-radius: 25px;
-    color: var(--white-color);
-    font-size: x-large;
-    margin: 0 10px;
-    transition: background 0.3s ease;
+/* ✅ Chat input styling — matches ChatGPT */
+.chat-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--black-color);
+  font-size: var(--font-size-l);
+  line-height: 1.5;
+  resize: none;
+  overflow-y: auto;
+  min-height: 24px;
+  max-height: 150px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
 }
 
-.send-button{
-    background-color: var(--white-color);
-    border: none;
-    color: var(--black-color);
-    font-size: 18px;
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s transform 0.2s;
+/* ✅ Smooth readable text area like ChatGPT */
+.chat-input::placeholder {
+  color: #666;
+  opacity: 0.7;
+  font-size: var(--font-size-n);
 }
 
+/* ✅ WebKit scrollbar styling */
+.chat-input::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-input::-webkit-scrollbar-thumb {
+  background-color: #bbb;
+  border-radius: 10px;
+}
+.chat-input::-webkit-scrollbar-thumb:hover {
+  background-color: #999;
+}
+
+/* ✅ Button styling */
+.send-button,
+.attach-button {
+  background: transparent;
+  border: none;
+  color: #333;
+  font-size: 18px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.send-button:hover,
+.attach-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  transform: scale(1.1);
+}
+
+/* ✅ Navbar (unchanged) */
+header .navbar {
+  display: flex;
+  padding: 15px 30px;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  left: 0;
+  z-index: 1000;
+  background-color: var(--secondary-color);
+  transition: box-shadow 0.3s ease;
+}
+
+header .navbar.scrolled {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.navbar .nav-logo .logo-text {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: var(--white-color);
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+}
+
+.navbar .nav-logo {
+  text-decoration: none;
+}
+
+.navbar .nav-logo:hover {
+  text-decoration: none;
+}
