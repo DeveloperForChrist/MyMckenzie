@@ -32,131 +32,135 @@
   --border-radius-circle: 50%;
 }
 
-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+body{
+  color: var(--white-color);
+  background: var(--primary-color-dark);
+}
+
+.container{
+  padding: 32px 0 60px;
   background: var(--background-color);
+  color: var(--white-color);
+  min-height: 100vh;
 }
 
-.title {
-  color: var(--white-color);
-  font-size: var(--font-size-3xl);
-  margin-bottom: 20px;
+.container * {
+  color: inherit;
+}
+
+.container :where(.app-header, .prompt-wrapper, .disclaimer){ 
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 20px;
+  max-width: 980px;
+} 
+
+/* App Header Styles, upper portion of the body where the hi I am.. sits*/
+
+.container .app-header{
+  margin-bottom: 4vh;
+} 
+
+/* App Header */
+.app-header .heading {
+    font-size: var(--font-size-3xl);
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-left: 220px;
+    color: var(--white-color);
+}
+
+/* Sub-heading the part that says What is your legal issue... */
+.app-header .sub-heading {
+    font-size: var(--font-size-xl);
+    color: var(--white-color);
+    margin-top: -5px;
+    margin-left: 240px;
+}
+
+/* Prompt Container - sticky at bottom so basically the input area */
+.prompt-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;            /* Fix width */
+    padding: 16px 20px;
+    background: var(--primary-color-dark);
+}
+
+/* Layout for input + buttons, so basically the area where user types */
+.prompt-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Form that contains the input and buttons, so basically the area where user types */
+.prompt-form {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: var(--black-color);
+    border-radius: 130px;
+    padding: 0 12px;
+    height: 56px;
+}
+
+.prompt-actions {
+    display: flex;
+    gap: 12px;
+    margin-left: 12px;
+}
+
+/* Input field where user types, so basically the area where user types */
+.prompt-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--white-color);
+    font-size: var(--font-size-l);
+    padding-left: 12px;
+    min-width: 0;
+    outline: none;
+}
+
+/* Placeholder text styles, this works on the input field box 
+and the text that is literally on it before it 
+goes when a user types */
+.prompt-input::placeholder {
+    color: var(--white-color);
+    opacity: 1 !important;
+}
+
+/* this works on the button graphic like
+ how big the circle around the button is */
+.prompt-wrapper button {
+    background: var(--black-color);
+    border: none;
+    color: var(--white-color);
+    width: 56px;
+    height: 56px;
+    border-radius: var(--border-radius-circle);
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.prompt-wrapper button:hover {
+    background: var(--black-color);
+    color: var(--white-color);
+    text-shadow: #E5E7EB 0px 0px 2px;
+}
+
+/* Removed invalid selector and fixed syntax */
+.prompt-form .prompt-input:valid ~ .prompt-actions .send-prompt-button {
+display: block;
+}
+
+.prompt-container .disclaimer{
   text-align: center;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  width: 100%;
-}
-
-/* ✅ Chat bar styled like ChatGPT */
-.chat-bar {
-  display: flex;
-  align-items: flex-end; /* Input aligns neatly with buttons */
-  justify-content: center;
-  width: 100%;
-  max-width: 750px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--border-radius-m);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  padding: 8px 12px;
-  margin-top: 10px;
-}
-
-/* ✅ Chat input styling — matches ChatGPT */
-.chat-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--black-color);
-  font-size: var(--font-size-l);
-  line-height: 1.5;
-  resize: none;
-  overflow-y: auto;
-  min-height: 24px;
-  max-height: 150px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  scrollbar-width: thin;
-  scrollbar-color: #ccc transparent;
-}
-
-/* ✅ Smooth readable text area like ChatGPT */
-.chat-input::placeholder {
-  color: #666;
-  opacity: 0.7;
-  font-size: var(--font-size-n);
-}
-
-/* ✅ WebKit scrollbar styling */
-.chat-input::-webkit-scrollbar {
-  width: 6px;
-}
-.chat-input::-webkit-scrollbar-thumb {
-  background-color: #bbb;
-  border-radius: 10px;
-}
-.chat-input::-webkit-scrollbar-thumb:hover {
-  background-color: #999;
-}
-
-/* ✅ Button styling */
-.send-button,
-.attach-button {
-  background: transparent;
-  border: none;
-  color: #333;
-  font-size: 18px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-
-.send-button:hover,
-.attach-button:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  transform: scale(1.1);
-}
-
-/* ✅ Navbar (unchanged) */
-header .navbar {
-  display: flex;
-  padding: 15px 30px;
-  align-items: center;
-  justify-content: space-between;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  left: 0;
-  z-index: 1000;
-  background-color: var(--secondary-color);
-  transition: box-shadow 0.3s ease;
-}
-
-header .navbar.scrolled {
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.navbar .nav-logo .logo-text {
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  color: var(--white-color);
-  font-size: var(--font-size-xl);
-  font-weight: 600;
-}
-
-.navbar .nav-logo {
-  text-decoration: none;
-}
-
-.navbar .nav-logo:hover {
-  text-decoration: none;
+  font-size: front-size-n;
+  padding: 16px 20px 0;
+  color: var(--white-color)
 }

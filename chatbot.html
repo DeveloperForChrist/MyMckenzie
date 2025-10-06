@@ -5,41 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="chatbot.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-    <title>Chatbot Page</title>
+    <title> MyMckenzie Chatbot</title>
 </head>
 <body>
 
-    <header>
-    <nav class="navbar">
-       <a href = "#" class = "nav-logo"> <h2 class = "logo-text"> MyMckenzie </h2></a>
-    </nav>
-    </header>
+    <div class = "container"> 
+        <!-- Chatbot Header -->
+        <header class="app-header">
+            <h1 class="heading"> Hello, I'm MyMckenzie</h1>
+            <h2 class="sub-heading"> What is your legal issue...</h2>
+        </header>
 
 
+        <!-- Prompt Container -->
+        <div class="prompt-container">
+            <div class="prompt-wrapper"> 
+                <form action="#" class="prompt-form">
+                    <input type="text" placeholder="Ask MyMckenzie" class="prompt-input" required>
+                    <div class="prompt-actions">
+                        <button id="add-file-button" type="button"    class="material-symbol-rounded"> 
+                            <i class="fa-solid fa-paperclip"> </i></button>
+                        <button id="send-prompt-button" class="material-symbol-rounded"><i class="fa-solid fa-long-arrow-right"></i>
+                            </button>
+                    </div>
+                </form>    
 
-
-    <div class="chat-container centered">
-        <div class="welcome-section">
-            <h1 class="title">Ask MyMckenzie</h1>
-        </div>
-        
-        <div class="chat-box">
-            <div class="messages"></div>
-            
-            <div class="chat-bar"> 
-                <!-- attach button -->
-                <button class="attach-button" title="Attach">
-                    <i class="fa-solid fa-plus" title="Attach"></i>
-                </button>
-                <textarea class="chat-input" placeholder=""></textarea>
-                <!-- send button -->
-                <button class="send-button" title="Send">
-                    <i class="fa-solid fa-arrow-right" title="Send"></i> 
-                </button>
+                <button id="delete-chats-button" class="material-symbol-rounded"><i class="fa-solid fa-trash"></i>
+                        </button>
             </div>
+
+            <p class="disclaimer"> For legal guidance only — not a substitute for legal advice.</p>
         </div>
+
+
+        
+
+
     </div>
-    <script src="chatbot.js"></script>
+
 </body>
 </html>
+
+
+
 
