@@ -1,6 +1,11 @@
-/* Importing the DM Sans font from Google Fonts */
+/* ===========================
+   Import Google Fonts
+=========================== */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
+/* ===========================
+   Global Styles & Variables
+=========================== */
 * {
   margin: 0;
   padding: 0; 
@@ -32,95 +37,101 @@
   --border-radius-circle: 50%;
 }
 
-/* Body styles */
-body{
+/* ===========================
+   Body & Main Container
+=========================== */
+body {
   color: var(--white-color);
   background: var(--primary-color-dark);
 }
 
-/* Main container styles */
-.container{
+.container {
   padding: 32px 0 60px;
   background: var(--background-color);
   color: var(--white-color);
   min-height: 100vh;
 }
-/* Ensuring all text inside container inherits the white color */
+
+/* Ensure all text inside container inherits white color */
 .container * {
   color: inherit;
 }
 
-/* Centering the header, prompt wrapper, disclaimer, and message */
-.container :where(.app-header, .prompt-wrapper, .disclaimer, .message){ 
+/* Center header, prompt, disclaimer, and messages */
+.container :where(.app-header, .prompt-wrapper, .disclaimer, .message) { 
   margin: 0 auto;
   width: 100%;
   padding: 0 20px;
   max-width: 980px;
-} 
+}
 
-/* App Header Styles, upper portion of the body where the hi I am.. sits*/
-
-.container .app-header{
+/* ===========================
+   Header Styles
+=========================== */
+.container .app-header {
   margin-bottom: 4vh;
-} 
+}
 
-/* App Header */
 .app-header .heading {
-    font-size: var(--font-size-3xl);
-    font-weight: 600;
-    margin-bottom: 8px;
-    margin-left: 220px;
-    color: var(--white-color);
+  font-size: var(--font-size-3xl);
+  font-weight: 600;
+  margin-bottom: 8px;
+  margin-left: 220px;
+  color: var(--white-color);
 }
 
-/* Sub-heading the part that says What is your legal issue... */
 .app-header .sub-heading {
-    font-size: var(--font-size-xl);
-    color: var(--white-color);
-    margin-top: -5px;
-    margin-left: 240px;
+  font-size: var(--font-size-xl);
+  color: var(--white-color);
+  margin-top: -5px;
+  margin-left: 240px;
 }
 
-/* Hiding the original header */
+/* Hide header if needed */
 .container :is(.app-header) {
   display: none;
 }
 
-/* Chat Container - the area where the chat messages will go */
+/* ===========================
+   Chat Container & Messages
+=========================== */
+.container .chat-container {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
+
+/* Message row layout */
 .chat-container .messages {
-  display:flex;
+  display: flex;
   gap: 11px;
   align-items: center;
 }
 
-/* Individual message styles */
-.chat-container .messages .message-text{
+/* Message text styling */
+.chat-container .messages .message-text {
   padding: 3px 16px;
   word-wrap: break-word;
   white-space: pre-line;
 }
 
-/* Individual user message styles, basically what it does
- is style the user's messages, like the box it stays in */
-.chat-container .user-message {
-  display: flex;
-  background: var(--black-color);
-  color: var(--white-color);
-  justify-content: flex-start;
-  align-items: flex-end;
-  gap: 8px;
+/* User message bubble */
+.chat-container .user-message .message-text {
   padding: 12px 16px;
-  max-width: 45%;
+  max-width: 75%;
   border-radius: 13px 13px 3px 13px;
-  word-wrap: break-word;
-  margin-left: auto;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-  position: relative; /* Add this */
+  background: var(--black-color);
 }
 
-/* User message styles */
-.chat-container .messages .user-message{
+/* User message container */
+.chat-container .user-message {
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 9px;
+}
+
+/* User message bubble styling */
+.chat-container .messages .user-message {
   padding: 12px 16px;
   position: relative;
   display: inline;
@@ -130,151 +141,119 @@ body{
   background: var(--black-color);
 }
 
-/* Individual bot message styles, basically what it does is style the bot's messages */
-.chat-container .bot-message{
-  display: inline-flex; /* use flexbox for alignment */
-  background: gray;
-  color: var(--white-color);
-  padding: 12px 16px;
-  max-width: 45%;
-  border-radius: 13px 13px 3px 13px;
-  word-wrap: break-word;
-  margin-left: 23%;  /* push to right */
-  margin-bottom: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-
+/* Bot message container */
+.chat-container .bot-message {
+  margin: 9px auto;
 }
 
-/* Bot avatar styles */
-.chat-container .bot-message .bot-avatar {
-  height: 43px; /* size of the circle */
-  width: 43px;/* size of the circle */
-  border-radius: 50%;/* makes it a circle */
-  flex-shrink: 0;/* prevent shrinking */
-  background: var(--primary-color);/* background color of the circle */
-  border: 1px solid var(--border-color);/* border color of the circle */
-  display: flex;/* center the icon */
-  align-items: center;/* center the icon */
-  justify-content: center;/* center the icon */
-  font-size: 30px; /* size of Font Awesome icon inside */
-}
+/* ===========================
+   Avatar Styles
+=========================== */
 
-
-.chat-container .user-message .user-avatar {
-  right: 8px;   /* Adjust as needed */
-  bottom: 8px;  /* Adjust as needed */
+/* Bot avatar (icon inside bot message) */
+.chat-container .bot-message .avatar {
   height: 43px;
   width: 43px;
   border-radius: 50%;
   flex-shrink: 0;
+  padding: 6px;
+  align-self: flex-start;
+  margin-right: -7px;
   background: var(--primary-color);
   border: 1px solid var(--border-color);
-  display: flex;
-  align-items: left;
-  justify-content: center;
-  font-size: 30px;
 }
 
-
-  /* Bot message styles */
-.chat-container .messages .bot-message{
-  background: var(--primary-color-light);
-  border-radius: var(--border-radius-m);
-  max-width: 60%;
-  align-self: flex-start;
-}
-
-/* Prompt Container - sticky at bottom so basically the input area */
+/* ===========================
+   Prompt/Input Section
+=========================== */
 .prompt-container {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;            /* Fix width */
-    padding: 16px 20px;
-    background: var(--primary-color-dark);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--primary-color-dark);
 }
 
-/* Layout for input + buttons, so basically the area where user types */
 .prompt-wrapper {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    max-width: 700px;
-    margin: 0 auto;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-/* Form that contains the input and buttons, so basically the area where user types */
+/* Input form styling */
 .prompt-form {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    background: var(--black-color);
-    border-radius: 130px;
-    padding: 0 12px;
-    height: 56px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: var(--black-color);
+  border-radius: 130px;
+  padding: 0 12px;
+  height: 56px;
 }
 
-/* Container for the action buttons, so basically the area where user types */
+/* Action buttons (attach/send) */
 .prompt-actions {
-    display: flex;
-    gap: 12px;
-    margin-left: 12px;
+  display: flex;
+  gap: 12px;
+  margin-left: 12px;
 }
 
-/* Input field where user types, so basically the area where user types */
+/* Input field */
 .prompt-input {
-    flex: 1;
-    background: none;
-    border: none;
-    color: var(--white-color);
-    font-size: var(--font-size-l);
-    padding-left: 12px;
-    min-width: 0;
-    outline: none;
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--white-color);
+  font-size: var(--font-size-l);
+  padding-left: 12px;
+  min-width: 0;
+  outline: none;
 }
 
-/* Placeholder text styles, this works on the input field box 
-and the text that is literally on it before it 
-goes when a user types */
+/* Placeholder text for input */
 .prompt-input::placeholder {
-    color: var(--white-color);
-    opacity: 1 !important;
+  color: var(--white-color);
+  opacity: 1 !important;
 }
 
-/* this works on the button graphic like
- how big the circle around the button is */
+/* Action button styling */
 .prompt-wrapper button {
-    background: var(--black-color);
-    border: none;
-    color: var(--white-color);
-    width: 56px;
-    height: 56px;
-    border-radius: var(--border-radius-circle);
-    cursor: pointer;
-    transition: background 0.3s ease;
+  background: var(--black-color);
+  border: none;
+  color: var(--white-color);
+  width: 56px;
+  height: 56px;
+  border-radius: var(--border-radius-circle);
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-/* this works on the button graphic when you hover over it */
+/* Button hover effect */
 .prompt-wrapper button:hover {
-    background: var(--black-color);
-    color: var(--white-color);
-    text-shadow: #E5E7EB 0px 0px 2px;
+  background: var(--black-color);
+  color: var(--white-color);
+  text-shadow: #E5E7EB 0px 0px 2px;
 }
 
-/* Initially hide the send button */
+/* Hide send button by default */
 #send-prompt-button {
-    display: none;
+  display: none;
 }
 
-/* Removed invalid selector and fixed syntax */
+/* Show send button when input is valid */
 .prompt-form .prompt-input:valid ~ .prompt-actions #send-prompt-button {
-display: block;
+  display: block;
 }
 
-/* Disclaimer text styles, the part at the bottom */
-.prompt-container .disclaimer{
+/* ===========================
+   Disclaimer Text
+=========================== */
+.prompt-container .disclaimer {
   text-align: center;
-  font-size: front-size-n;
+  font-size: var(--font-size-n);
   padding: 16px 20px 0;
-  color: var(--white-color)
+  color: var(--white-color);
 }
