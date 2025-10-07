@@ -118,8 +118,8 @@ body {
 /* User message bubble */
 .chat-container .user-message .message-text {
   padding: 12px 16px;
-  max-width: 75%;
-  border-radius: 13px 13px 3px 13px;
+  width: 50%;
+  border-radius: 14px 14px 14px 14px;
   background: var(--black-color);
 }
 
@@ -127,7 +127,7 @@ body {
 .chat-container .user-message {
   flex-direction: column;
   align-items: flex-end;
-  margin-right: 9px;
+  margin-right: -25px;
 }
 
 /* User message bubble styling */
@@ -144,6 +144,9 @@ body {
 /* Bot message container */
 .chat-container .bot-message {
   margin: 9px auto;
+  width: 100%;
+  max-width: 45%;
+  margin-left: 365px;
 }
 
 /* ===========================
