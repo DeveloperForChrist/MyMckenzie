@@ -149,6 +149,12 @@ body {
   margin-left: 365px;
 }
 
+.bot-message .message-text {
+  white-space: pre-line; /* respects line breaks */
+  line-height: 1.5;      /* adds spacing for readability */
+}
+
+
 /* ===========================
    Avatar Styles
 =========================== */
