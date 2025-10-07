@@ -99,9 +99,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+   overflow-x: hidden;
   overflow-y: auto;
   padding: 1rem;
-  padding-bottom: 300px; /* extra space for fixed input bar */
+  padding-bottom: 120px; /* extra space for fixed input bar */
   max-height: calc(100vh - 0px); /* ensure full viewport height */
 }
 
@@ -110,6 +111,8 @@ body {
   display: flex;
   gap: 11px;
   align-items: center;
+  max-width: 100%;    /* prevent overflow */
+  word-wrap: break-word;
 }
 
 /* Message text styling */
@@ -117,6 +120,8 @@ body {
   padding: 3px 16px;
   word-wrap: break-word;
   white-space: pre-line;
+  margin: 0;
+  border: none;
 }
 
 /* User message bubble */
