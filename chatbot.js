@@ -4,9 +4,10 @@ window.addEventListener("DOMContentLoaded", () => {
   const chatContainer = document.querySelector(".chat-container");
   const promptForm = document.querySelector(".prompt-form");
   const promptInput = promptForm.querySelector(".prompt-input");
+  const promptContainer = document.querySelector(".prompt-container");
 
   // --- Gemini API Configuration ---
-  const API_KEY = "AIzaSyArGnZbyf9Ot3N4mo85VT8K0shIrGDyJB8"; // Replace with your Gemini key
+  const API_KEY = "AIzaSyArGnZbyf9Ot3N4mo85VT8K0shIrGDyJB8"; // Replace with your key
   const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${API_KEY}`;
 
   // --- Chat History ---
@@ -17,18 +18,17 @@ window.addEventListener("DOMContentLoaded", () => {
 You are MyMcKenzie — an AI legal guidance assistant for people representing themselves in UK courts.
 You help users understand legal processes, documents, and terminology clearly in plain English.
 You do not offer legal advice — only general guidance.
-Whenever you are saying Mymckenzie, make sure it is exactly Mymckenzie with no space between My and Mckenzie
-If you are reading a user input and it talks about looking for a mckenzie friend then you are the Mckenzie friend
-Always include this disclaimer at least once: "⚖️ This is general legal guidance, not legal advice."
-Be friendly, ethical, and supportive like a patient McKenzie Friend.
+Whenever you are saying Mymckenzie, make sure it is exactly Mymckenzie with no space between My and Mckenzie.
+Always include this disclaimer at least once in bold: "⚖️ This is general legal guidance, not legal advice."
+Be extremely professional, ethical, and supportive like a patient McKenzie Friend.
 `;
 
   // --- Helper: Format Bot Text ---
   const formatBotText = (text) => {
     return text
-      .replace(/\n/g, "<br>")               // Preserve line breaks
-      .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // Bold
-      .replace(/\*(.*?)\*/g, "<i>$1</i>");    // Italic
+      .replace(/\n/g, "<br>")
+      .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+      .replace(/\*(.*?)\*/g, "<i>$1</i>");
   };
 
   // --- Helper: Create Message Element ---
@@ -39,12 +39,18 @@ Be friendly, ethical, and supportive like a patient McKenzie Friend.
     return div;
   };
 
+  // --- Scroll chat to bottom accounting for input bar ---
+  const scrollToBottom = () => {
+    const barHeight = promptContainer.offsetHeight;
+    chatContainer.scrollTop = chatContainer.scrollHeight - barHeight;
+  };
+
   // --- Append Bot Message ---
   const appendBotMessage = (text) => {
     const formatted = formatBotText(text);
     const botDiv = createMsgElement(`<p class="message-text">${formatted}</p>`, "bot-message");
     chatContainer.appendChild(botDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    scrollToBottom();
     return botDiv;
   };
 
@@ -52,16 +58,14 @@ Be friendly, ethical, and supportive like a patient McKenzie Friend.
   const appendUserMessage = (text) => {
     const userDiv = createMsgElement(`<p class="message-text">${text}</p>`, "user-message");
     chatContainer.appendChild(userDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    scrollToBottom();
   };
 
   // --- Generate Response from Gemini ---
   const generateResponse = async (userMessage, botDiv) => {
     try {
-      // Save user message in chat history
       chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
 
-      // API request
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -76,47 +80,41 @@ Be friendly, ethical, and supportive like a patient McKenzie Friend.
       const data = await response.json();
       if (!response.ok) throw new Error(data.error?.message || "Unknown error");
 
-      // Extract and format reply
       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "⚠️ No response received.";
       botDiv.querySelector(".message-text").innerHTML = formatBotText(reply);
-
-      // Save bot response in chat history
       chatHistory.push({ role: "model", parts: [{ text: reply }] });
 
+      scrollToBottom();
     } catch (error) {
       botDiv.querySelector(".message-text").textContent = `⚠️ Error: ${error.message}`;
       console.error("Gemini Error:", error);
+      scrollToBottom();
     }
-
-    chatContainer.scrollTop = chatContainer.scrollHeight;
   };
 
   // --- Handle Form Submit ---
   promptForm.addEventListener("submit", (e) => {
     e.preventDefault();
-
     const userMessage = promptInput.value.trim();
     if (!userMessage) return;
     promptInput.value = "";
 
-    // Display User Message
     appendUserMessage(userMessage);
 
-    // Display Thinking Message
     const botDiv = createMsgElement(
-      `<i class="fa-solid fa-circle-user bot-avatar"></i><p class="message-text">Thinking...</p>`,
+      `<i class="fa-solid fa-circle-user bot-avatar"></i>
+       <p class="message-text">Thinking...</p>`,
       "bot-message"
     );
     chatContainer.appendChild(botDiv);
-    chatContainer.scrollTop = chatContainer.scrollHeight;
+    scrollToBottom();
 
-    // Call Gemini
     generateResponse(userMessage, botDiv);
   });
 
   // --- Initial Greeting ---
   appendBotMessage(
-    "👋 Hello, I’m <b>MyMcKenzie</b>. I can help you understand legal processes, forms, and court procedures. This is general legal guidance, not legal advice."
+    "👋 Hello, I’m <b>MyMcKenzie</b>. I can help you understand legal processes, forms, and court procedures. <b>⚖️ This is general legal guidance, not legal advice.</b>"
   );
 
 });

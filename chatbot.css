@@ -97,8 +97,12 @@ body {
 =========================== */
 .container .chat-container {
   display: flex;
-  gap: 20px;
   flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  padding: 1rem;
+  padding-bottom: 300px; /* extra space for fixed input bar */
+  max-height: calc(100vh - 0px); /* ensure full viewport height */
 }
 
 /* Message row layout */
@@ -182,6 +186,7 @@ body {
   width: 100%;
   padding: 16px 20px;
   background: var(--primary-color-dark);
+  z-index: 100; /* make sure it sits above chat */
 }
 
 .prompt-wrapper {
@@ -265,4 +270,11 @@ body {
   font-size: var(--font-size-n);
   padding: 16px 20px 0;
   color: var(--white-color);
+}
+
+/* Responsive for mobile */
+@media screen and (max-width: 768px) {
+  .chat-container {
+    padding-bottom: 240px; /* slightly more for mobile keyboards */
+  }
 }
