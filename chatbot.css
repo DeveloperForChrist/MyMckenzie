@@ -233,6 +233,18 @@ header .navbar.scrolled {
   background: var(--primary-color);
 }
 
+.bot-message .message-text a.legal-link {
+  color: #A5B4FC;       /* light purple to stand out */
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.bot-message .message-text a.legal-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+
 .file-upload-wrapper {
   display: flex;
   align-items: center;
