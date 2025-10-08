@@ -45,8 +45,75 @@ body {
   background: var(--primary-color-dark);
 }
 
+
+
+/* Navbar styling */
+header {
+  background: var(--secondary-color);
+}
+
+
+
+header .navbar {
+  display: flex;
+  padding: 15px 30px;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  left: 0;
+  z-index: 1000;
+  background-color: var(--secondary-color);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Shadow appears only when scrolling */
+header .navbar.scrolled {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.navbar .nav-menu {
+  display: flex;
+  gap: 10px; 
+}
+
+.navbar .nav-logo .logo-text {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color:rgb(23, 55, 235);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.nav-logo{
+  pointer-events: none;   /* disables all mouse events */
+  user-select: none; 
+}
+
+.navbar .nav-menu .nav-link {
+  padding: 10px 18px;
+  color: var(--white-color);
+  background-color: var(--primary-color-dark);
+  font-size: var(--font-size-m);
+  border-radius: var(--border-radius-m);
+  transition: 0.25s ease;
+  font-weight: var(--font-weight-bold)
+  
+}
+
+.navbar .nav-menu .nav-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 3px;
+  color: var(--white-color);
+}
+
+.navbar .nav-menu .nav-link:active {
+  transform: translateY(3px);   /* moves button down */
+}
+
 .container {
-  padding: 32px 0 60px;
+  padding: 100px 0 60px; /* add top padding to account for fixed navbar */
   background: var(--background-color);
   color: var(--white-color);
   min-height: 100vh;
@@ -69,27 +136,17 @@ body {
    Header Styles
 =========================== */
 .container .app-header {
-  margin-bottom: 4vh;
+  margin: 1.5rem auto 3rem;
+  text-align: center;
+  max-width: 980px;
+  padding: 0 20px;
+  display: block;
 }
 
 .app-header .heading {
   font-size: var(--font-size-3xl);
   font-weight: 600;
-  margin-bottom: 8px;
-  margin-left: 220px;
   color: var(--white-color);
-}
-
-.app-header .sub-heading {
-  font-size: var(--font-size-xl);
-  color: var(--white-color);
-  margin-top: -5px;
-  margin-left: 240px;
-}
-
-/* Hide header if needed */
-.container :is(.app-header) {
-  display: none;
 }
 
 /* ===========================
@@ -107,7 +164,7 @@ body {
 }
 
 /* Message row layout */
-.chat-container .messages {
+.chat-container .message {
   display: flex;
   gap: 11px;
   align-items: center;
@@ -116,7 +173,7 @@ body {
 }
 
 /* Message text styling */
-.chat-container .messages .message-text {
+.chat-container .message .message-text {
   padding: 3px 16px;
   word-wrap: break-word;
   white-space: pre-line;
@@ -127,7 +184,8 @@ body {
 /* User message bubble */
 .chat-container .user-message .message-text {
   padding: 12px 16px;
-  width: 50%;
+  width: auto;
+  max-width: 75%;
   border-radius: 14px 14px 14px 14px;
   background: var(--black-color);
 }
@@ -140,28 +198,60 @@ body {
 }
 
 /* User message bubble styling */
-.chat-container .messages .user-message {
+.chat-container .user-message {
   padding: 12px 16px;
   position: relative;
-  display: inline;
+  display: flex;
   margin-left: auto;
-  max-width: 75%;
-  border-radius: 13px 13px 3px 13px;
-  background: var(--black-color);
+  max-width: 70%;
 }
 
 /* Bot message container */
 .chat-container .bot-message {
-  margin: 9px auto;
+  margin: 9px 0;
   width: 100%;
-  max-width: 45%;
-  margin-left: 365px;
+  max-width: 75%;
 }
 
 .bot-message .message-text {
   white-space: pre-line; /* respects line breaks */
   line-height: 1.5;      /* adds spacing for readability */
+}  
+
+.chat-container .bot-message .message-text {
+  padding: 12px 16px;
+  width: 70%;
+  border-radius: 14px 14px 14px 14px;
+  background: var(--primary-color);
 }
+
+/* Special class for Thinking message */
+.chat-container .bot-message.thinking .message-text {
+  max-width: fit-content;  /* bubble width fits text */
+  min-width: 80px;         /* optional: small minimum width */
+  display: inline-block;
+  background: var(--primary-color);
+}
+
+.file-upload-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.file-upload-wrapper button {
+  background: none;
+  border: none;
+  color: var(--white-color);
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 6px;
+  transition: 0.3s ease;
+}
+
+.file-upload-wrapper button:hover {
+  color: var(--primary-color-light);
+}
+
 
 
 /* ===========================
@@ -193,6 +283,8 @@ body {
   background: var(--primary-color-dark);
   z-index: 100; /* make sure it sits above chat */
 }
+
+
 
 .prompt-wrapper {
   display: flex;

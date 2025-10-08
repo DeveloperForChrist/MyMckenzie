@@ -1,37 +1,61 @@
 window.addEventListener("DOMContentLoaded", () => {
 
-  // --- Select DOM Elements ---
+  // --- DOM Elements ---
   const chatContainer = document.querySelector(".chat-container");
   const promptForm = document.querySelector(".prompt-form");
   const promptInput = promptForm.querySelector(".prompt-input");
-  const promptContainer = document.querySelector(".prompt-container");
+  const appHeader = document.getElementById("app-header");
+  const promptMessage = document.getElementById("prompt-message");
 
-  // --- Gemini API Configuration ---
-  const API_KEY = "AIzaSyArGnZbyf9Ot3N4mo85VT8K0shIrGDyJB8"; // Replace with your key
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${API_KEY}`;
+  const fileUploadWrapper = document.querySelector(".file-upload-wrapper");
+  const fileInput = document.getElementById("file-input");
+  const addFileButton = document.getElementById("add-file-button");
+  const cancelFileButton = document.getElementById("cancel-file-button");
+  const filePreview = fileUploadWrapper.querySelector(".filepreview");
 
-  // --- Chat History ---
+  const deleteChatsButton = document.getElementById("delete-chats-button");
+  const sendButton = document.getElementById("send-prompt-button");
+
+  // --- Initial UI State ---
+  chatContainer.style.display = "none";
+  sendButton.style.display = "none"; // hide send button initially
+  let hasUserStartedChat = false;
+
+  // --- User plan & file limits ---
+  const isPremiumUser = window.isPremiumUser === true;
+  let freeUserFileCount = 0;
+  const FREE_USER_FILE_LIMIT = 2;
+
+  // --- Chat history ---
   const chatHistory = [];
 
-  // --- MyMcKenzie System Prompt ---
+  // --- Gemini API config ---
+  const API_KEY = "AIzaSyArGnZbyf9Ot3N4mo85VT8K0shIrGDyJB8"; // Replace with your key
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${API_KEY}`;
   const systemPrompt = `
-You are MyMcKenzie — an AI legal guidance assistant for people representing themselves in UK courts.
-You help users understand legal processes, documents, and terminology clearly in plain English.
-You do not offer legal advice — only general guidance.
-Whenever you are saying Mymckenzie, make sure it is exactly Mymckenzie with no space between My and Mckenzie.
-Always include this disclaimer at least once in bold: "⚖️ This is general legal guidance, not legal advice."
-Be extremely professional, ethical, and supportive like a patient McKenzie Friend.
+You are MyMcKenzie AI — an intelligent UK-based legal assistant.
+You help litigants in person by offering plain-English legal process guidance.
+Never refer to yourself as “Google Gemini.” Always use “MyMcKenzie AI.”
 `;
 
-  // --- Helper: Format Bot Text ---
-  const formatBotText = (text) => {
-    return text
-      .replace(/\n/g, "<br>")
-      .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
-      .replace(/\*(.*?)\*/g, "<i>$1</i>");
+  // --- Helper Functions ---
+  const scrollToBottom = () => {
+    chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: "smooth" });
   };
 
-  // --- Helper: Create Message Element ---
+  const typingEffect = (text, targetElement) => {
+    targetElement.textContent = "";
+    let index = 0;
+    const typeChunk = () => {
+      const chunkSize = Math.floor(Math.random() * 3) + 1;
+      targetElement.textContent += text.slice(index, index + chunkSize);
+      index += chunkSize;
+      scrollToBottom();
+      if (index < text.length) setTimeout(typeChunk, Math.floor(Math.random() * 40) + 20);
+    };
+    typeChunk();
+  };
+
   const createMsgElement = (html, ...classes) => {
     const div = document.createElement("div");
     div.innerHTML = html;
@@ -39,33 +63,52 @@ Be extremely professional, ethical, and supportive like a patient McKenzie Frien
     return div;
   };
 
-  // --- Scroll chat to bottom accounting for input bar ---
-  const scrollToBottom = () => {
-    const barHeight = promptContainer.offsetHeight;
-    chatContainer.scrollTop = chatContainer.scrollHeight - barHeight;
-  };
-
-  // --- Append Bot Message ---
-  const appendBotMessage = (text) => {
-    const formatted = formatBotText(text);
-    const botDiv = createMsgElement(`<p class="message-text">${formatted}</p>`, "bot-message");
+  const appendBotMessage = (text, isThinking = false) => {
+    const classes = ["bot-message"];
+    if (isThinking) classes.push("thinking"); // special class for Thinking
+    const botDiv = createMsgElement(`<p class="message-text">${text}</p>`, ...classes);
     chatContainer.appendChild(botDiv);
     scrollToBottom();
     return botDiv;
   };
 
-  // --- Append User Message ---
   const appendUserMessage = (text) => {
     const userDiv = createMsgElement(`<p class="message-text">${text}</p>`, "user-message");
     chatContainer.appendChild(userDiv);
     scrollToBottom();
   };
 
-  // --- Generate Response from Gemini ---
-  const generateResponse = async (userMessage, botDiv) => {
-    try {
-      chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+  const hidePromptMessage = () => {
+    if (promptMessage) promptMessage.style.display = "none";
+  };
 
+  const activateChat = () => {
+    if (!hasUserStartedChat) {
+      chatContainer.style.display = "block";
+      appHeader.style.display = "none";
+      hasUserStartedChat = true;
+      hidePromptMessage();
+    }
+  };
+
+  // --- Show send button only when typing ---
+  promptInput.addEventListener("input", () => {
+    if (promptInput.value.trim() === "") {
+      sendButton.style.display = "none";
+    } else {
+      sendButton.style.display = "inline-block";
+    }
+  });
+
+  // --- Hide header and banner on input focus ---
+  promptInput.addEventListener("focus", activateChat);
+
+  // --- Generate response via Gemini ---
+  const generateResponse = async (userMessage) => {
+    const botDiv = appendBotMessage("💬 Thinking...", true);
+    chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+
+    try {
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -81,159 +124,53 @@ Be extremely professional, ethical, and supportive like a patient McKenzie Frien
       if (!response.ok) throw new Error(data.error?.message || "Unknown error");
 
       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "⚠️ No response received.";
-      botDiv.querySelector(".message-text").innerHTML = formatBotText(reply);
       chatHistory.push({ role: "model", parts: [{ text: reply }] });
 
-      scrollToBottom();
-    } catch (error) {
-      botDiv.querySelector(".message-text").textContent = `⚠️ Error: ${error.message}`;
-      console.error("Gemini Error:", error);
+      typingEffect(reply, botDiv.querySelector(".message-text"));
+    } catch (err) {
+      botDiv.querySelector(".message-text").textContent = `⚠️ Error: ${err.message}`;
+      console.error("Gemini Error:", err);
       scrollToBottom();
     }
   };
 
-  // --- Handle Form Submit ---
+  // --- Handle form submit ---
   promptForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const userMessage = promptInput.value.trim();
-    if (!userMessage) return;
+    const userText = promptInput.value.trim();
+    if (!userText && !fileInput.files.length) return;
+
+    activateChat();
+    appendUserMessage(userText || "[File attached]");
     promptInput.value = "";
+    sendButton.style.display = "none";
 
-    appendUserMessage(userMessage);
-
-    const botDiv = createMsgElement(
-      `<i class="fa-solid fa-circle-user bot-avatar"></i>
-       <p class="message-text">Thinking...</p>`,
-      "bot-message"
-    );
-    chatContainer.appendChild(botDiv);
-    scrollToBottom();
-
-    generateResponse(userMessage, botDiv);
+    generateResponse(userText || "[File attached]");
   });
 
-  // --- Initial Greeting ---
-  appendBotMessage(
-    "👋 Hello, I’m <b>MyMcKenzie</b>. I can help you understand legal processes, forms, and court procedures. <b>⚖️ This is general legal guidance, not legal advice.</b>"
-  );
+  // --- Delete chats ---
+  deleteChatsButton.addEventListener("click", () => {
+    chatContainer.innerHTML = "";
+    chatContainer.style.display = "none";
+    hasUserStartedChat = false;
+    if(appHeader) appHeader.style.display = "block";
+    if(promptMessage) promptMessage.style.display = "block";
+    chatHistory.length = 0;
+  });
 
-});window.addEventListener("DOMContentLoaded", () => {
-
-  // --- Select DOM Elements ---
-  const chatContainer = document.querySelector(".chat-container");
-  const promptForm = document.querySelector(".prompt-form");
-  const promptInput = promptForm.querySelector(".prompt-input");
-  const promptContainer = document.querySelector(".prompt-container");
-
-  // --- Gemini API Configuration ---
-  const API_KEY = "AIzaSyArGnZbyf9Ot3N4mo85VT8K0shIrGDyJB8"; // Replace with your key
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${API_KEY}`;
-
-  // --- Chat History ---
-  const chatHistory = [];
-
-  // --- MyMcKenzie System Prompt ---
-  const systemPrompt = `
-You are MyMcKenzie — an AI legal guidance assistant for people representing themselves in UK courts.
-You help users understand legal processes, documents, and terminology clearly in plain English.
-You do not offer legal advice — only general guidance.
-Whenever you are saying Mymckenzie, make sure it is exactly Mymckenzie with no space between My and Mckenzie.
-Always include this disclaimer at least once in bold: "⚖️ This is general legal guidance, not legal advice."
-Be extremely professional, ethical, and supportive like a patient McKenzie Friend.
-`;
-
-  // --- Helper: Format Bot Text ---
-  const formatBotText = (text) => {
-    return text
-      .replace(/\n/g, "<br>")
-      .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
-      .replace(/\*(.*?)\*/g, "<i>$1</i>");
-  };
-
-  // --- Helper: Create Message Element ---
-  const createMsgElement = (html, ...classes) => {
-    const div = document.createElement("div");
-    div.innerHTML = html;
-    div.classList.add("message", ...classes);
-    return div;
-  };
-
-  // --- Scroll chat to bottom accounting for input bar ---
-  const scrollToBottom = () => {
-    const barHeight = promptContainer.offsetHeight;
-    chatContainer.scrollTop = chatContainer.scrollHeight - barHeight;
-  };
-
-  // --- Append Bot Message ---
-  const appendBotMessage = (text) => {
-    const formatted = formatBotText(text);
-    const botDiv = createMsgElement(`<p class="message-text">${formatted}</p>`, "bot-message");
-    chatContainer.appendChild(botDiv);
-    scrollToBottom();
-    return botDiv;
-  };
-
-  // --- Append User Message ---
-  const appendUserMessage = (text) => {
-    const userDiv = createMsgElement(`<p class="message-text">${text}</p>`, "user-message");
-    chatContainer.appendChild(userDiv);
-    scrollToBottom();
-  };
-
-  // --- Generate Response from Gemini ---
-  const generateResponse = async (userMessage, botDiv) => {
-    try {
-      chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
-
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            { role: "user", parts: [{ text: systemPrompt }] },
-            ...chatHistory
-          ]
-        })
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message || "Unknown error");
-
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "⚠️ No response received.";
-      botDiv.querySelector(".message-text").innerHTML = formatBotText(reply);
-      chatHistory.push({ role: "model", parts: [{ text: reply }] });
-
-      scrollToBottom();
-    } catch (error) {
-      botDiv.querySelector(".message-text").textContent = `⚠️ Error: ${error.message}`;
-      console.error("Gemini Error:", error);
-      scrollToBottom();
+  // --- File attachments ---
+  addFileButton.addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", () => {
+    if(fileInput.files[0]){
+      filePreview.src = URL.createObjectURL(fileInput.files[0]);
+      filePreview.style.display = 'inline-block';
+      cancelFileButton.style.display = 'inline-block';
     }
-  };
-
-  // --- Handle Form Submit ---
-  promptForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const userMessage = promptInput.value.trim();
-    if (!userMessage) return;
-    promptInput.value = "";
-
-    appendUserMessage(userMessage);
-
-    const botDiv = createMsgElement(
-      `<i class="fa-solid fa-circle-user bot-avatar"></i>
-       <p class="message-text">Thinking...</p>`,
-      "bot-message"
-    );
-    chatContainer.appendChild(botDiv);
-    scrollToBottom();
-
-    generateResponse(userMessage, botDiv);
   });
-
-  // --- Initial Greeting ---
-  appendBotMessage(
-    "👋 Hello, I’m <b>MyMcKenzie</b>. I can help you understand legal processes, forms, and court procedures. <b>⚖️ This is general legal guidance, not legal advice.</b>"
-  );
+  cancelFileButton.addEventListener("click", () => {
+    fileInput.value = '';
+    filePreview.style.display = 'none';
+    cancelFileButton.style.display = 'none';
+  });
 
 });
