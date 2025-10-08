@@ -18,23 +18,22 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // --- Initial UI State ---
   if (chatContainer) chatContainer.style.display = "none";
-  if (sendButton) sendButton.style.display = "none"; // hide send button initially
+  if (sendButton) sendButton.style.display = "none";
   let hasUserStartedChat = false;
 
   // --- User plan & file limits ---
   const isPremiumUser = window.isPremiumUser === true;
   let freeUserFileCount = 0;
-  const FREE_USER_FILE_LIMIT = 2;
+  const FREE_USER_FILE_LIMIT = 0;
 
   // --- Chat history ---
   const chatHistory = [];
 
   // --- Gemini API config ---
-  // NOTE: Do NOT hard-code API keys in client-side code in production.
-  const API_KEY = "AIzaSyArGnZbyf9Ot3N4mo85VT8K0shIrGDyJB8"; // Replace with your key or better: call your server-side proxy
+  const API_KEY = "AIzaSyArGnZbyf9Ot3N4mo85VT8K0shIrGDyJB8";
   const API_URL = API_KEY
     ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${API_KEY}`
-    : "/api/generate"; // prefer server proxy in production
+    : "/api/generate";
 
   const systemPrompt = `
 You are MyMcKenzie AI — an intelligent UK-based legal assistant.
@@ -45,14 +44,13 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
   // --- Helper Functions ---
   const scrollToBottom = () => {
     if (!chatContainer) return;
-    const threshold = 50; // pixels from bottom
+    const threshold = 50;
     const distanceFromBottom = chatContainer.scrollHeight - chatContainer.clientHeight - chatContainer.scrollTop;
     if (distanceFromBottom < threshold) {
       chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: "smooth" });
     }
   };
 
-  // Escape HTML to avoid XSS
   const escapeHtml = (str = "") =>
     str
       .replace(/&/g, "&amp;")
@@ -61,68 +59,28 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
 
-  // Shorter, deduping linkify: shows hostname as the link text and avoids repeated full URLs
   const linkify = (() => {
-  const debugLinks = false; // set true to log hrefs created
+    const hostnameFor = (url) => {
+      try { return new URL(url).hostname; } catch { return url; }
+    };
 
-  // Helper to get hostname fallback
-  const hostnameFor = (url) => {
-    try { return new URL(url).hostname; } catch (e) { return url; }
-  };
+    return (text) => {
+      if (!text) return "";
+      const mdRe = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+      let preprocessed = text.replace(mdRe, (match, label, href) => href);
+      const escaped = escapeHtml(preprocessed);
+      const urlPattern = /https?:\/\/[^\s<)>\]]+/g;
+      return escaped.replace(urlPattern, (matchEscaped) => {
+        let href = matchEscaped.replace(/&amp;/g, "&").replace(/[.,:;!?\)\]\}]+$/g, "");
+        const label = hostnameFor(href);
+        const safeHref = escapeHtml(href);
+        const safeLabel = escapeHtml(label);
+        return `<a href="${safeHref}" target="_blank" rel="noopener noreferrer" class="legal-link">${safeLabel}</a>`;
+      });
+    };
+  })();
 
-  return (text) => {
-    if (!text) return "";
-
-    // 1) Handle Markdown-style links like [label](https://...).
-    // Convert to a placeholder that contains only the URL so later logic treats it consistently.
-    // We keep original label for fallback but prefer hostname as visible text later.
-    const mdRe = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
-    let preprocessed = text.replace(mdRe, (match, labelRaw, hrefRaw) => {
-      // leave just the href text in place of the whole markdown link
-      // so we don't accidentally capture the surrounding brackets in the URL match.
-      return hrefRaw;
-    });
-
-    // 2) Escape to prevent XSS for non-url parts
-    const escapeHtml = (str = "") =>
-      str.replace(/&/g, "&amp;")
-         .replace(/</g, "&lt;")
-         .replace(/>/g, "&gt;")
-         .replace(/"/g, "&quot;")
-         .replace(/'/g, "&#39;");
-
-    const escaped = escapeHtml(preprocessed);
-
-    // 3) Match http(s) URLs; exclude closing parentheses/brackets/angle brackets to avoid including them
-    const urlPattern = /https?:\/\/[^\s<)>\]]+/g;
-    const seen = new Set();
-
-    const replaced = escaped.replace(urlPattern, (matchEscaped) => {
-      // matchEscaped is escaped text; create href by reversing &amp; -> &
-      let href = matchEscaped.replace(/&amp;/g, "&");
-
-      // 4) Remove any trailing punctuation that might still have been included (.,:;!?)+ or ]
-      href = href.replace(/[.,:;!?\)\]\}]+$/g, "");
-
-      // 5) Build a short label (hostname) for display
-      const label = hostnameFor(href) || href;
-
-      const safeHref = escapeHtml(href);
-      const safeLabel = escapeHtml(label);
-
-      if (debugLinks) console.info("[linkify] =>", { href, label });
-
-      // mark seen (keeps behavior consistent; you can hide duplicates here if you wish)
-      seen.add(href);
-
-      return `<a href="${safeHref}" target="_blank" rel="noopener noreferrer" class="legal-link">${safeLabel}</a>`;
-    });
-
-    return replaced;
-  };
-})();
-
-  // Typing effect: accumulate text and run linkify on the whole accumulated string
+  // Typing effect
   const typingEffect = (text, targetElement) => {
     if (!targetElement) return;
     let index = 0;
@@ -178,16 +136,13 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     }
   };
 
-  // --- Show send button only when typing ---
   if (promptInput) {
     promptInput.addEventListener("input", () => {
       if (sendButton) sendButton.style.display = promptInput.value.trim() ? "inline-block" : "none";
     });
-    // Also hide header and banner on input focus
     promptInput.addEventListener("focus", activateChat);
   }
 
-  // --- Generate response via Gemini (or your server proxy) ---
   const generateResponse = async (userMessage) => {
     const botDiv = appendBotMessage("💬 Thinking...", true);
     chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
@@ -197,7 +152,6 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // If you use a server proxy, it should attach the system prompt as system role server-side
           contents: [
             { role: "user", parts: [{ text: systemPrompt }] },
             ...chatHistory
@@ -211,7 +165,6 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "⚠️ No response received.";
       chatHistory.push({ role: "model", parts: [{ text: reply }] });
 
-      // Use typingEffect which preserves URLs intact
       const target = botDiv ? botDiv.querySelector(".message-text") : null;
       typingEffect(reply, target);
     } catch (err) {
@@ -223,7 +176,6 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     }
   };
 
-  // --- Handle form submit ---
   if (promptForm) {
     promptForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -239,7 +191,6 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     });
   }
 
-  // --- Delete chats ---
   if (deleteChatsButton) {
     deleteChatsButton.addEventListener("click", () => {
       if (!chatContainer) return;
@@ -252,22 +203,53 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     });
   }
 
-  // --- File attachments ---
-  if (addFileButton && fileInput) addFileButton.addEventListener("click", () => fileInput.click());
+  // --- Toast Notification ---
+  const showToast = (message) => {
+    let toast = document.createElement("div");
+    toast.className = "toast-message";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add("visible"), 100);
+    setTimeout(() => {
+      toast.classList.remove("visible");
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  };
+
+  // --- File attachments with free-user limit ---
+  if (addFileButton && fileInput) {
+    addFileButton.addEventListener("click", () => {
+      if (!isPremiumUser && freeUserFileCount >= FREE_USER_FILE_LIMIT) {
+        showToast(`⚠️ Free-Plan users can only upload ${FREE_USER_FILE_LIMIT} file. To upload more files, please upgrade to premium for unlimited uploads.`);
+        return;
+      }
+      fileInput.click();
+    });
+  }
+
   if (fileInput) {
     fileInput.addEventListener("change", () => {
-      if (fileInput.files[0] && filePreview) {
-        filePreview.src = URL.createObjectURL(fileInput.files[0]);
-        filePreview.style.display = 'inline-block';
-        if (cancelFileButton) cancelFileButton.style.display = 'inline-block';
+      const file = fileInput.files[0];
+      if (file && filePreview) {
+        if (!isPremiumUser && freeUserFileCount >= FREE_USER_FILE_LIMIT) {
+          showToast(`⚠️ You've reached your free upload limit.`);
+          fileInput.value = "";
+          return;
+        }
+        filePreview.src = URL.createObjectURL(file);
+        filePreview.style.display = "inline-block";
+        if (cancelFileButton) cancelFileButton.style.display = "inline-block";
+        if (!isPremiumUser) freeUserFileCount++;
       }
     });
   }
+
   if (cancelFileButton) {
     cancelFileButton.addEventListener("click", () => {
-      if (fileInput) fileInput.value = '';
-      if (filePreview) filePreview.style.display = 'none';
-      cancelFileButton.style.display = 'none';
+      if (fileInput) fileInput.value = "";
+      if (filePreview) filePreview.style.display = "none";
+      cancelFileButton.style.display = "none";
+      if (!isPremiumUser && freeUserFileCount > 0) freeUserFileCount--;
     });
   }
 

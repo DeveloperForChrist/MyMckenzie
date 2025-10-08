@@ -244,6 +244,27 @@ header .navbar.scrolled {
   text-decoration: underline;
 }
 
+.toast-message {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #d32f2f;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 9999;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.toast-message.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 
 .file-upload-wrapper {
   display: flex;
