@@ -53,6 +53,29 @@ header {
 }
 
 
+/* Stop button styling matches Send/Attach */
+#stop-button {
+  background: var(--black-color);
+  border: none;
+  color: var(--white-color);
+  width: 56px;
+  height: 56px;
+  border-radius: var(--border-radius-circle);
+  cursor: pointer;
+  transition: background 0.3s ease;
+  #stop-button {
+  display: inline-flex !important; /* force it visible */
+  align-items: center;
+  justify-content: center;
+}
+
+}
+
+#stop-button:hover {
+  background: var(--primary-color-light);
+  color: var(--white-color);
+}
+
 
 header .navbar {
   display: flex;
@@ -314,10 +337,8 @@ header .navbar.scrolled {
   width: 100%;
   padding: 16px 20px;
   background: var(--primary-color-dark);
-  z-index: 100; /* make sure it sits above chat */
+  z-index: 100; /* sit above chat */
 }
-
-
 
 .prompt-wrapper {
   display: flex;
@@ -338,13 +359,6 @@ header .navbar.scrolled {
   height: 56px;
 }
 
-/* Action buttons (attach/send) */
-.prompt-actions {
-  display: flex;
-  gap: 12px;
-  margin-left: 12px;
-}
-
 /* Input field */
 .prompt-input {
   flex: 1;
@@ -357,39 +371,50 @@ header .navbar.scrolled {
   outline: none;
 }
 
-/* Placeholder text for input */
 .prompt-input::placeholder {
   color: var(--white-color);
   opacity: 1 !important;
 }
 
-/* Action button styling */
-.prompt-wrapper button {
-  background: var(--black-color);
-  border: none;
-  color: var(--white-color);
+/* Actions container (Attach, Send, Stop) */
+.prompt-actions {
+  display: flex;
+  gap: 8px; /* spacing between buttons */
+}
+
+/* All buttons inside prompt-actions */
+.prompt-actions button {
   width: 56px;
   height: 56px;
   border-radius: var(--border-radius-circle);
+  border: none;
   cursor: pointer;
+  display: inline-flex; /* ensures button shows */
+  align-items: center;
+  justify-content: center;
+  background: var(--black-color);
+  color: var(--white-color);
   transition: background 0.3s ease;
 }
 
-/* Button hover effect */
-.prompt-wrapper button:hover {
-  background: var(--black-color);
+.prompt-actions button:hover {
+  background: var(--primary-color-light);
   color: var(--white-color);
-  text-shadow: #E5E7EB 0px 0px 2px;
+  text-shadow: 0 0 2px #E5E7EB;
 }
 
-/* Hide send button by default */
+/* Hide send button by default, show when input is valid */
 #send-prompt-button {
   display: none;
 }
 
-/* Show send button when input is valid */
 .prompt-form .prompt-input:valid ~ .prompt-actions #send-prompt-button {
-  display: block;
+  display: inline-flex;
+}
+
+/* Stop button */
+#stop-button {
+  display: inline-flex;
 }
 
 /* ===========================
@@ -402,9 +427,13 @@ header .navbar.scrolled {
   color: var(--white-color);
 }
 
-/* Responsive for mobile */
+/* Mobile responsiveness */
 @media screen and (max-width: 768px) {
   .chat-container {
-    padding-bottom: 240px; /* slightly more for mobile keyboards */
+    padding-bottom: 240px; /* extra space for mobile keyboards */
+  }
+  .prompt-actions button {
+    width: 48px;
+    height: 48px;
   }
 }

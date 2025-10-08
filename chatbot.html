@@ -1,110 +1,79 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="chatbot.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <title>MyMckenzie chatbot</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyMcKenzie Chatbot</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chatbot.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <style>
+        /* Stop button styling to match Send/Attach */
+        #stop-button {
+            background: var(--black-color);
+            border: none;
+            color: var(--white-color);
+            width: 56px;
+            height: 56px;
+            border-radius: var(--border-radius-circle);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #stop-button:hover {
+            background: var(--primary-color-light);
+            color: var(--white-color);
+        }
+    </style>
 </head>
 <body>
 
-  <header>
+<header>
     <nav class="navbar">
-      <a href="#" class="nav-logo">
-        <h2 class="logo-text">MyMckenzie</h2>
-      </a>
-      <ul class="nav-menu">
-        <li class="nav-item">
-          <a href="#" class="nav-link">Login</a>
-        </li>
-      </ul>
+        <a href="#" class="nav-logo"> 
+            <h2 class="logo-text">MyMcKenzie</h2>
+        </a>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="#" class="nav-link">Login</a>
+            </li>
+        </ul>
     </nav>
-  </header>
+</header>
 
-  <div class="app-header" id="app-header">
-    <h1 class="heading">MyMckenzie</h1>
-  </div>
+<div class="container"> 
 
-  <div class="container">
     <!-- Chat container -->
-    <div class="chat-container" aria-live="polite" aria-atomic="false"></div>
-
+    <div class="chat-container"></div>
+    
     <!-- Prompt Container -->
     <div class="prompt-container">
-      <div class="prompt-wrapper">
-        <form action="#" class="prompt-form" aria-label="Chat with MyMckenzie">
-          <input type="text" placeholder="Ask MyMckenzie" class="prompt-input" autocomplete="off" />
-          <div class="prompt-actions">
-            <div class="file-upload-wrapper">
-              <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt,.png,.jpg" hidden />
-              <button id="add-file-button" type="button" class="material-symbol-rounded" aria-label="Attach a file" title="Attach a file">
-                <i class="fa-solid fa-paperclip"></i>
-              </button>
-              <button id="cancel-file-button" type="button" class="material-symbol-rounded" aria-label="Cancel file upload" title="Cancel file upload" style="display:none;">
-                <i class="fa-solid fa-xmark"></i>
-              </button>
-              <img class="filepreview" alt="attached file preview" style="display:none; max-width:80px; border-radius:8px; margin-left:8px;" />
-            </div>
-            <button id="send-prompt-button" type="submit" class="material-symbol-rounded" aria-label="Send message" title="Send message">
-              <i class="fa-solid fa-long-arrow-right"></i>
+        <div class="prompt-wrapper"> 
+            <form action="#" class="prompt-form">
+                <input type="text" placeholder="Ask MyMcKenzie" class="prompt-input" required>
+                <div class="prompt-actions">
+                    <button id="add-file-button" type="button" title="Attach a file"> 
+                        <i class="fa-solid fa-paperclip"></i>
+                    </button>
+                    <button id="send-prompt-button" type="submit" title="Send message">
+                        <i class="fa-solid fa-long-arrow-right"></i>
+                    </button>
+                    <button id="stop-button" type="button" title="Stop AI response">
+                        <i class="fa-solid fa-square"></i>
+                    </button>
+                </div>
+            </form>    
+
+            <button id="delete-chats-button" type="button" title="Delete all chats">
+                <i class="fa-solid fa-trash"></i>
             </button>
-          </div>
-        </form>
+        </div>
 
-        <button id="delete-chats-button" type="button" class="material-symbol-rounded" aria-label="Delete all chats" title="Delete all chats">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </div>
-
-      <p class="disclaimer">For legal guidance only — not a substitute for legal advice.</p>
+        <p class="disclaimer">For legal guidance only — not a substitute for legal advice.</p>
     </div>
-  </div>
 
-  <script>
-    // Set this from your backend, cookie, or API in production.
-    window.isPremiumUser = false; // true for premium users, false for free users
-  </script>
+</div>
 
-  <!-- existing chat logic (your chatbot.js should append .message elements into .chat-container) -->
-  <script src="chatbot.js"></script>
-  <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
-
-  <!-- Small script to hide the app header when chat is activated (message added or input focused).
-       Uses a MutationObserver so it works with your existing chatbot.js without modifying it. -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const appHeader = document.getElementById('app-header');
-      const chatContainer = document.querySelector('.chat-container');
-      const promptInput = document.querySelector('.prompt-input');
-
-      if (!appHeader || !chatContainer) return;
-
-      // Show header only when there are no messages
-      function updateHeaderVisibility() {
-        const hasMessages = !!chatContainer.querySelector('.message');
-        appHeader.style.display = hasMessages ? 'none' : 'block';
-      }
-
-      // Observe additions/removals to the chat container so header updates automatically
-      const observer = new MutationObserver(updateHeaderVisibility);
-      observer.observe(chatContainer, { childList: true, subtree: true });
-
-      // Also hide header immediately when the user focuses the input (interpreted as activating chat)
-      if (promptInput) {
-        promptInput.addEventListener('focus', () => {
-          appHeader.style.display = 'none';
-        });
-      }
-
-      // If you clear chats elsewhere, ensure that code removes .message elements so header returns.
-      // Initialize visibility on load
-      updateHeaderVisibility();
-
-      // Optional: expose a helper if other scripts want to force an update
-      window.updateAppHeaderVisibility = updateHeaderVisibility;
-    });
-  </script>
+<script src="chatbot.js"></script>
 </body>
 </html>

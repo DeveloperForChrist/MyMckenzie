@@ -15,6 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const deleteChatsButton = document.getElementById("delete-chats-button");
   const sendButton = document.getElementById("send-prompt-button");
+  const stopButton = document.getElementById("stop-button"); // Stop button
 
   // --- Initial UI State ---
   if (chatContainer) chatContainer.style.display = "none";
@@ -52,18 +53,13 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
   };
 
   const escapeHtml = (str = "") =>
-    str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
+    str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+       .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
   const linkify = (() => {
     const hostnameFor = (url) => {
       try { return new URL(url).hostname; } catch { return url; }
     };
-
     return (text) => {
       if (!text) return "";
       const mdRe = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
@@ -80,12 +76,17 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     };
   })();
 
-  // Typing effect
+  // --- Typing effect with stop support ---
+  let stopTyping = false; // global flag
+
   const typingEffect = (text, targetElement) => {
     if (!targetElement) return;
     let index = 0;
     let accumulated = "";
+    stopTyping = false;
+
     const typeChunk = () => {
+      if (stopTyping) return;
       const chunkSize = Math.floor(Math.random() * 3) + 1;
       accumulated += text.slice(index, index + chunkSize);
       index += chunkSize;
@@ -93,10 +94,21 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       scrollToBottom();
       if (index < text.length) {
         setTimeout(typeChunk, Math.floor(Math.random() * 40) + 20);
+      } else {
+        targetElement.classList.remove("thinking"); // done typing
       }
     };
     typeChunk();
   };
+
+  // --- Stop button functionality ---
+  if (stopButton) {
+    stopButton.addEventListener("click", () => {
+      stopTyping = true;
+      const lastBotMessage = document.querySelector(".bot-message.thinking .message-text");
+      if (lastBotMessage) lastBotMessage.classList.remove("thinking");
+    });
+  }
 
   const createMsgElement = (html, ...classes) => {
     const div = document.createElement("div");
@@ -123,10 +135,7 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     return userDiv;
   };
 
-  const hidePromptMessage = () => {
-    if (promptMessage) promptMessage.style.display = "none";
-  };
-
+  const hidePromptMessage = () => { if (promptMessage) promptMessage.style.display = "none"; };
   const activateChat = () => {
     if (!hasUserStartedChat) {
       if (chatContainer) chatContainer.style.display = "block";
@@ -143,6 +152,7 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     promptInput.addEventListener("focus", activateChat);
   }
 
+  // --- Generate AI response ---
   const generateResponse = async (userMessage) => {
     const botDiv = appendBotMessage("💬 Thinking...", true);
     chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
@@ -167,6 +177,7 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
 
       const target = botDiv ? botDiv.querySelector(".message-text") : null;
       typingEffect(reply, target);
+
     } catch (err) {
       if (botDiv && botDiv.querySelector(".message-text")) {
         botDiv.querySelector(".message-text").textContent = `⚠️ Error: ${err.message || err}`;
@@ -176,6 +187,7 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     }
   };
 
+  // --- Form submit ---
   if (promptForm) {
     promptForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -191,6 +203,7 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     });
   }
 
+  // --- Delete chats ---
   if (deleteChatsButton) {
     deleteChatsButton.addEventListener("click", () => {
       if (!chatContainer) return;
@@ -216,11 +229,11 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     }, 3000);
   };
 
-  // --- File attachments with free-user limit ---
+  // --- File attachments ---
   if (addFileButton && fileInput) {
     addFileButton.addEventListener("click", () => {
       if (!isPremiumUser && freeUserFileCount >= FREE_USER_FILE_LIMIT) {
-        showToast(`⚠️ Free-Plan users can only upload ${FREE_USER_FILE_LIMIT} file. To upload more files, please upgrade to premium for unlimited uploads.`);
+        showToast(`⚠️ Free-Plan users can only upload ${FREE_USER_FILE_LIMIT} file. Upgrade for unlimited uploads.`);
         return;
       }
       fileInput.click();
