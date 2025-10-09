@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyMcKenzie Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" /> <!-- all styling comes from CSS -->
+  <script type="module" src="dashboard.js" defer></script>
+</head>
+<body>
+  <div class="form" id="dashboard">
+
+    <!-- Welcome Section -->
+    <p class="title">Dashboard</p>
+    <p class="message" id="welcomeMessage"></p>
+    <button class="submit" id="logoutBtn">Log Out</button>
+
+    <!-- Plan Section -->
+    <div id="planContainer"></div>
+
+    <!-- Chat History Section -->
+    <h3 class="section-title">Chat History</h3>
+    <div class="chat-history" id="chatHistory"></div>
+
+    <!-- Chat Input Section -->
+    <div class="chat-input-container">
+      <input type="text" id="userMessage" placeholder="Type a message..." class="chat-input">
+      <button id="sendBtn" class="submit">Send</button>
+    </div>
+
+  </div>
+</body>
+</html>
