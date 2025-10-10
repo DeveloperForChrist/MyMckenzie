@@ -42,7 +42,7 @@ main p {
 /* ================= DASHBOARD CARDS ================= */
 .dashboard-cards {
 display: grid;
-grid-template-columns: repeat(auto-fit, minmax(200px, 0.4fr));
+grid-template-columns: repeat(auto-fit, minmax(200px, 0.47fr));
 gap: 24px;
 justify-content: center;
 }
