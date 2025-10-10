@@ -41,9 +41,10 @@ main p {
 
 /* ================= DASHBOARD CARDS ================= */
 .dashboard-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 24px;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 0.4fr));
+gap: 24px;
+justify-content: center;
 }
 
 /* Card style */
