@@ -3,77 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <!--Boxicons-->
+
+  <!-- Boxicons -->
   <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="user-dashboard.css" /> <!-- all styling comes from CSS -->
+  <!-- Font Awesome (for notification bell) -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
+  <link rel="stylesheet" href="user-dashboard.css" />
   <title>MyMcKenzie User Hub</title>
-
 </head>
 <body>
+    <main>
+  <h1>Hello,</h1>
+  <p>This is your personalized MyMcKenzie dashboard.</p>
 
-      <!--SIDEBAR-->
-      <section id="sidebar">
-        <a href = "" class="brand">
-            <i class="bx bxs-smile"></i>
-            <span class="text">Your Dashboard</span>
-        </a>
-        <ul class="side-menu ">
-          <li>
-            <a href="" class="">
-              <i class="bx bxs-dashboard"></i>
-              <span class="text">Dashboard</span>
-            </a>
-          </li>
-          <li>
-            <a href="" class="">
-              <i class='bx  bx-history'  ></i> 
-              <span class="text">Chat History</span>
-            </a>
-          </li>
-          <li>
-            <a href="" class="">
-              <i class='bx  bx-group'  ></i>    
-              <span class="text">Find A Mckenzie Friend</span>
-            </a>
-          </li>
-          <li>
-            <a href="" class="">
-              <i class='bx  bx-cog'  ></i> 
-              <span class="text">Settings</span>
-            </a>
-          </li>
-          <li>
-            <a href="" class="">
-              <i class='bx  bx-arrow-to-left-stroke'></i>   
-              <span class="text">Log Out</span>
-            </a>
-          </li>
-        </ul>
-        
-      </section>
+  <!-- Top row: 3 cards -->
+  <div class="dashboard-cards">
+    <div class="card">
+      <i class='bx bx-chat'></i>
+      <h3>Conversation</h3>
+      <p>View your chat history</p>
+    </div>
+    <div class="card">
+      <i class='bx bx-group'></i>
+      <h3>McKenzie Friends</h3>
+      <p>Find and connect</p>
+    </div>
+    <div class="card">
+      <i class='bx bx-cog'></i>
+      <h3>Settings</h3>
+      <p>Manage your preferences</p>
+    </div>
+  </div>
 
-      <section id="content">
+  </main>
+  <!-- Bottom row: 2 cards -->
+  <div class="dashboard-cards">
+    <div class="card">
+      <i class='bx bx-file'></i>
+      <h3>View Documents</h3>
+      <p>Access your recent uploads</p>
+    </div>
+    <div class="card">
+      <i class='bx bx-envelope'></i>
+      <h3>Contact Us</h3>
+      <p>Send us your inquiries</p>
+    </div>
+  </div>
 
-          <nav>
-            <i class="bx bx-menu"></i>
-            <a href="" class="navlink"><Menu></Menu></a>
-
-            <a href="" class="notification"> 
-              <i class="fa-regular fa-bell"></i>
-              <span class="num">1</span>
-            </a>
-            <a href="">
-              <img src="my_photo-1.jpg">
-            </a>
-          </nav>
-      </section>
+  <!-- Talk button below -->
+  <div class="talk-btn-container">
+    <button class="talk-btn">Talk with MyMcKenzie</button>
+  </div>
 
 
+</section>
 
-
-    <script src="user-dashboard.js"></script>  
+ 
+  <script src="user-dashboard.js" defer></script>
 </body>
 </html>

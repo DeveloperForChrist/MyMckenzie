@@ -1,34 +1,39 @@
-// Select all sidebar links
-const allSideMenuLinks = document.querySelectorAll('#sidebar .side-menu li a');
-const sidebar = document.getElementById('sidebar');
-const menuBtn = document.querySelector('.bx-menu');
+// Sidebar toggle
+const menuIcon = document.querySelector('#menu-icon');
+const sidebar = document.querySelector('#sidebar');
 
-// Highlight active link and store it
+menuIcon.addEventListener('click', () => {
+  sidebar.classList.toggle('hide');
+  localStorage.setItem('sidebarHidden', sidebar.classList.contains('hide'));
+});
+
+// Keep sidebar state remembered
+if (localStorage.getItem('sidebarHidden') === 'true') {
+  sidebar.classList.add('hide');
+}
+
+// Sidebar active link highlighting
+const menuLinks = document.querySelectorAll('#sidebar .side-menu li a');
+
 function setActiveLink(link) {
-  allSideMenuLinks.forEach(l => l.classList.remove('active'));
+  menuLinks.forEach(l => l.classList.remove('active'));
   link.classList.add('active');
   localStorage.setItem('activeLink', link.textContent.trim());
 }
 
-// Add event listeners to links
-allSideMenuLinks.forEach(link => {
-  link.addEventListener('click', function(e) {
-    e.preventDefault(); // Prevent page reload
-    setActiveLink(this);
+menuLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    setActiveLink(link);
   });
 });
 
-// Restore active link on reload
-const savedLink = localStorage.getItem('activeLink');
-if (savedLink) {
-  allSideMenuLinks.forEach(link => {
-    if (link.textContent.trim() === savedLink) {
-      link.classList.add('active');
-    }
+// Restore last active link
+const saved = localStorage.getItem('activeLink');
+if (saved) {
+  menuLinks.forEach(link => {
+    if (link.textContent.trim() === saved) link.classList.add('active');
   });
+} else {
+  menuLinks[0].classList.add('active');
 }
-
-// Sidebar toggle
-menuBtn.addEventListener('click', () => {
-  sidebar.classList.toggle('hide');
-});
