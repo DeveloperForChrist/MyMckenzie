@@ -267,3 +267,4 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
   }
 
 });
+

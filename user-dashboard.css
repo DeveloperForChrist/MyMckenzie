@@ -1,0 +1,27 @@
+/* ===========================
+   Import Google Fonts
+=========================== */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
+
+/* ===========================
+   Global Styles
+=========================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: ;
+  padding: 20px;
+}
+
+a{
+  text-decoration: ;
+}
