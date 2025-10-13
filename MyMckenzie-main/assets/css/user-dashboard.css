@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+}
+
+a { text-decoration: none; color: inherit; }
+li { list-style: none; }
+
+:root {
+  --primary-color: rebeccapurple;
+  --primary-color-light: #a78bfa;
+  --white-color: #ffffff;
+  --dark-bg: #2e1a47;
+}
+
+/* ================= BODY ================= */
+body {
+  background: var(--primary-color);
+  color: var(--white-color);
+  overflow-x: hidden;
+}
+
+/* ================= MAIN ================= */
+main {
+  padding: 24px;
+}
+
+main h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+main p {
+  color: #d3d3d3;
+  margin-bottom: 20px;
+}
+
+/* ================= DASHBOARD CARDS ================= */
+.dashboard-cards {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 0.47fr));
+gap: 24px;
+justify-content: center;
+}
+
+/* Card style */
+.card {   
+  background: #3b1d5a;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: 0.3s ease;
+  height: 250px; /* taller cards */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* vertically center content */
+}
+
+.card:hover {
+  background: var(--primary-color-light);
+  transform: translateY(-5px);
+}
+
+.card i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+/* ================= TALK BUTTON ================= */
+.talk-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px; /* space from bottom cards */
+}
+
+.talk-btn {
+  background: var(--primary-color-light);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 18px 40px; /* larger for visual balance */
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.talk-btn:hover {
+  background: white;
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+

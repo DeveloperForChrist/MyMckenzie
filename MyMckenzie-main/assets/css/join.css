@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+}
+
+a { text-decoration: none; color: inherit; }
+li { list-style: none; }
+
+:root {
+  --primary-color: rebeccapurple;
+  --primary-color-light: #a78bfa;
+  --white-color: #ffffff;
+  --dark-bg: #2e1a47;
+}
+
+/* ================= BODY ================= */
+body {
+  background: var(--primary-color);
+  color: var(--white-color);
+  overflow: hidden; /* prevent scrolling */
+}
+.h1 {
+  text-align: center;  /* centers text horizontally */
+  margin-bottom: 20px; /* adds space between heading and cards */
+}
+
+/* ================= CENTERED CARDS ================= */
+main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column; /* stack h1 and cards */
+  justify-content: center; /* center vertically */
+  align-items: center; /* center horizontally */
+  font-size: x-large;
+  gap: 30px;
+}   
+
+.center-cards {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+/* ================= CARD STYLE ================= */
+.card {   
+  background: #3b1d5a;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: 0.3s ease;
+  height: 400px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card:hover {
+  background: var(--primary-color-light);
+  transform: translateY(-5px);
+}
+
+.card i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+}
+
+.card p {
+  color: #d3d3d3;
+  font-size: 0.95rem;
+}

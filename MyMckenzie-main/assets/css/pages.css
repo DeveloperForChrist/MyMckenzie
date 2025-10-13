@@ -1,0 +1,96 @@
+/* Page-specific components (chat history, messages) */
+.chat-container {
+  max-width: 900px;
+  margin: 120px auto 40px;
+  background: linear-gradient(180deg, rgba(39,4,39,0.85), rgba(28,26,66,0.95));
+  padding: 24px;
+  border-radius: 12px;
+  color: var(--white-color);
+}
+.chat-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+.chat-bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: var(--font-size-n);
+}
+.chat-bubble.user {
+  align-self: flex-end;
+  background: var(--primary-color-light);
+  color: var(--black-color);
+}
+.chat-bubble.bot {
+  align-self: flex-start;
+  background: rgba(255,255,255,0.06);
+  color: var(--white-color);
+}
+.chat-input-row {
+  display: flex;
+  gap: 8px;
+}
+.chat-input-row input[type="text"] {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.02);
+  color: var(--white-color);
+}
+.chat-input-row button {
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--primary-color-light);
+  color: var(--black-color);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Timestamp under each chat bubble */
+.chat-time {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-top: 6px;
+  text-align: right;
+}
+
+.chat-bubble .chat-text {
+  white-space: pre-wrap;
+}
+
+/* Attachment/upload styles */
+.chat-attachments-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+}
+.upload-progress {
+  width: 160px;
+  height: 10px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.upload-progress .progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--primary-color-light);
+  transition: width 0.25s ease;
+}
+.file-link {
+  display: inline-block;
+  color: var(--primary-color-light);
+  text-decoration: underline;
+  margin-top: 6px;
+}
+
+/* Utility */
+.hidden { display: none !important; }
+.sr-only { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }

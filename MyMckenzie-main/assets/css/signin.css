@@ -1,0 +1,146 @@
+/* ===========================
+   Import Google Fonts
+=========================== */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
+
+/* ===========================
+   Global Styles
+=========================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+}
+
+:root {
+  --primary-color-dark: #270427;
+  --secondary-color: #1c1a42;
+  --black-color: #000000;
+  --white-color: #ffffff;
+  --input-bg: #222;
+  --border-radius-m: 20px;
+  --font-size-l: 1rem;
+  --font-size-xl: 1.2rem;
+}
+
+/* ===========================
+   Body
+=========================== */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: var(--primary-color-dark);
+  color: var(--white-color);
+  padding: 20px;
+}
+
+/* ===========================
+   Form Container
+=========================== */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 400px;
+  background: #000;
+  padding: 25px;
+  border-radius: var(--border-radius-m);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+/* Title & Messages */
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--white-color);
+}
+
+.message {
+  font-size: var(--font-size-l);
+  text-align: center;
+  color: #ccc;
+}
+
+/* ===========================
+   Input Fields
+=========================== */
+.form label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.form input {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: var(--border-radius-m);
+  border: none;
+  outline: none;
+  background: var(--input-bg);
+  color: var(--white-color);
+  font-size: var(--font-size-l);
+  margin-top: 5px;
+}
+
+.form input::placeholder {
+  color: #aaa;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+.submit {
+  background: var(--white-color);
+  color: var(--black-color);
+  border: none;
+  border-radius: var(--border-radius-m);
+  padding: 12px 0;
+  font-size: var(--font-size-l);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit:hover {
+  background: var(--black-color);
+  color: var(--white-color);
+  border: 1px solid var(--white-color);
+}
+
+/* ===========================
+   Links
+=========================== */
+.signin {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.signin a {
+  color: var(--white-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.signin a:hover {
+  color: #A5B4FC; /* light purple accent */
+}
+
+/* ===========================
+   Responsive
+=========================== */
+@media (max-width: 480px) {
+  .form {
+    padding: 20px;
+    max-width: 95%;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+}

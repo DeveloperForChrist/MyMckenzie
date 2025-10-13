@@ -1,0 +1,95 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
+
+/* Reset and global styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'DM Sans', sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rebeccapurple;
+}
+
+/* Container */
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+/* Contact Form */
+.contact-form {
+    background: #3b1d5a;
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Heading */
+.contact-form h1 {
+    color: white;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.contact-form .subtext {
+    color: #ddd;
+    font-size: 0.95rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Input fields */
+.contact-form .field {
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    background-color: beige;
+}
+
+/* Textarea */
+.contact-form textarea.field {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Submit Button */
+.contact-form button {
+    margin-top: 10px;
+    padding: 14px;
+    border-radius: 50px;
+    border: none;
+    background: #a78bfa;
+    color: black;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.contact-form button:hover {
+    background: white;
+    color: #3b1d5a;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 480px) {
+    .contact-form {
+        padding: 30px 20px;
+    }
+    .contact-form h1 {
+        font-size: 1.5rem;
+    }
+}

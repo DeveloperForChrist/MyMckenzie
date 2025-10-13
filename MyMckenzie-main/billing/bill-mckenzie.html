@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Billing & Renewal - MyMcKenzie</title>
+  <link rel="stylesheet" href="../assets/css/settings.css" />
+</head>
+<body>
+  <div class="settings-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Settings</h2>
+      <ul>
+        <li><a href="../settings/settings.html">Account Info</a></li>
+        <li class="active"><a href="billing.html">Renewal/Billing</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Billing Panel -->
+    <main class="settings-main">
+      <h1>Billing & Renewal</h1>
+      <p class="desc">Manage your subscription plan, payment method, and view invoices.</p>
+
+      <!-- Current Plan -->
+      <section class="settings-section">
+        <h2>Current Plan</h2>
+        <div class="plan-card">
+          <p><strong>Plan:</strong> Premium (£25/month)</p>
+          <p><strong>Next Renewal:</strong> 15 November 2025</p>
+          <p><strong>Status:</strong> Active</p>
+          <button class="save-btn">Manage Subscription</button>
+        </div>
+      </section>
+
+      <!-- Payment Info -->
+      <section class="settings-section">
+        <h2>Payment Method</h2>
+        <div class="form-group full-width">
+          <label>Card on File</label>
+          <input type="text" placeholder="**** **** **** 4829" readonly />
+        </div>
+
+        <div class="form-group full-width">
+          <label>Billing Email</label>
+          <input type="email" placeholder="user@email.com" readonly />
+        </div>
+
+        <button class="save-btn">Update Payment Method</button>
+      </section>
+
+      <!-- Billing History -->
+      <section class="settings-section">
+        <h2>Billing History</h2>
+        <table class="billing-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Invoice</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>15 Oct 2025</td>
+              <td>£25.00</td>
+              <td>Paid</td>
+              <td><a href="#">Download</a></td>
+            </tr>
+            <tr>
+              <td>15 Sept 2025</td>
+              <td>£25.00</td>
+              <td>Paid</td>
+              <td><a href="#">Download</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

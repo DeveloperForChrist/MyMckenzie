@@ -1,0 +1,16 @@
+{
+  "name": "mymckenzie-scaffold-restructure",
+  "version": "1.0.0",
+  "description": "Helper script to reorganize CSS/JS into assets and update HTML references",
+  "main": "scripts/restructure.js",
+  "scripts": {
+    "restructure": "node scripts/restructure.js",
+    "serve": "npx http-server -c-1",
+    "test:e2e": "node ./scripts/e2e/run-join-test.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12"
+  }
+}

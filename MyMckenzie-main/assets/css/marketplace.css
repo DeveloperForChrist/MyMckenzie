@@ -1,0 +1,114 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
+
+/* Global Styles */
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'DM Sans', sans-serif;
+}
+
+body {
+  background: rebeccapurple;
+  color: white;
+  min-height: 100vh;
+}
+
+/* Header */
+header {
+  text-align: center;
+  padding: 40px 20px 20px 20px;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+header p {
+  font-size: 1.1rem;
+  color: #ddd;
+}
+
+/* Profiles Container */
+.profile-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+  padding: 20px;
+}
+
+/* Individual Profile Card */
+.profile-card {
+  background: #3b1d5a;
+  border-radius: 15px;
+  padding: 20px;
+  width: 280px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.profile-card img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  object-fit: cover;
+  border: 2px solid #a78bfa;
+}
+
+.profile-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 5px;
+}
+
+.profile-card p {
+  font-size: 0.95rem;
+  color: #ddd;
+  margin-bottom: 10px;
+}
+
+.profile-card .bio {
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+/* Contact Button */
+.contact-btn {
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+  background: #a78bfa;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.contact-btn:hover {
+  background: #ffffff;
+  color: #3b1d5a;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Hover effect on card */
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profile-card {
+    width: 45%;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    width: 90%;
+  }
+}

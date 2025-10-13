@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conversation - MyMcKenzie</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/user-dashboard.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <a href="../index.html" class="nav-logo"><h2 class="logo-text">MyMckenzie</h2></a>
+      <ul class="nav-menu"><li class="nav-item"><a class="nav-link" href="../auth/signin.html">Sign in</a></li></ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="chat-container">
+      <h1 class="title">Conversations</h1>
+      <p class="message">Your conversation history with MyMckenzie.</p>
+
+      <div class="chat-list"></div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Type a message..." />
+        <button id="chatSend">Send</button>
+      </div>
+
+      <div class="chat-attachments-row">
+        <label for="fileInput" class="sr-only">Choose a file to upload</label>
+        <input type="file" id="fileInput" aria-label="Choose a file to upload" />
+        <button id="fileUploadBtn">Upload file</button>
+        <div id="uploadProgress" class="upload-progress hidden">
+          <div class="progress-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <link rel="stylesheet" href="../assets/css/pages.css">
+    <script type="module" src="../assets/js/conversation.js" defer></script>
+  </main>
+</body>
+</html>

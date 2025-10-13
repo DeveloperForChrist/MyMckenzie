@@ -1,0 +1,149 @@
+/* ===========================
+   Import Google Fonts
+=========================== */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
+
+/* ===========================
+   Global Styles & Variables
+=========================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #111;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 350px;
+  background: black;
+  padding: 20px;
+  border-radius: 20px;
+  position: relative;
+}
+
+.title {
+  font-size: 28px;
+  color: white;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+.message,
+.signin {
+  color: white;
+  font-size: 14px;
+  text-align: center;
+}
+
+.signin a {
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.signin a:hover {
+  color: #666;
+}
+
+.form-group {
+  display: flex;
+  width: 100%;
+  gap: 6px;
+}
+
+.form label {
+  position: relative;
+  width: 100%;
+}
+
+.form label input {
+  width: 100%;
+  padding: 10px 10px 20px 10px;
+  outline: none;
+  border: none;
+  border-radius: 10px;
+}
+
+.form label input + span {
+  position: absolute;
+  left: 10px;
+  top: 15px;
+  color: #555;
+  font-size: 0.9em;
+  cursor: text;
+  transition: 0.3s ease;
+}
+
+.form label input:placeholder-shown + span {
+  top: 15px;
+  font-size: 0.9em;
+}
+
+.form label input:focus + span,
+.form label input:valid + span {
+  top: 30px;
+  font-size: 0.7em;
+  font-weight: 600;
+  color: #999;
+}
+
+.form label .icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: white;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9;
+}
+
+.submit {
+  border: none;
+  outline: none;
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.submit:hover {
+  background: black;
+  color: white;
+  border: 1px solid white;
+}
+
+/* Spinner */
+.spinner {
+  display: none;
+  width: 28px;
+  height: 28px;
+  border: 4px solid rgba(255,255,255,0.2);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 8px auto 0 auto;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.status-msg { color: #ccc; text-align:center; font-size:0.9rem; margin-top:8px }

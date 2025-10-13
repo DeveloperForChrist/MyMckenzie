@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyMcKenzie Sign Up</title>
+  <link rel="stylesheet" href="../assets/css/user-signup.css" />
+  <script type="module" src="../assets/js/user-signup.js" defer></script>
+</head>
+<body>
+  <div class="form">
+    <p class="title">Sign Up</p>
+    <p class="message">Create your MyMcKenzie account.</p>
+
+    <label>
+      First Name
+      <input type="text" id="firstName" placeholder="Enter your first name" required />
+    </label>
+
+    <label>
+      Last Name
+      <input type="text" id="lastName" placeholder="Enter your last name" required />
+    </label>
+
+    <label>
+      Email
+      <input type="email" id="email" placeholder="Enter your email" required />
+    </label>
+
+    <label>
+      Password
+      <input type="password" id="password" placeholder="Enter your password" required />
+    </label>
+
+    <button class="submit" id="signupBtn">Sign Up</button>
+
+    <div id="signupStatus">
+      <div class="spinner" id="signupSpinner" aria-hidden="true"></div>
+      <div class="status-msg" id="statusMsg"></div>
+    </div>
+
+    <p class="signin">
+      Already have an account? <a href="signin.html">Sign In</a>
+    </p>
+  </div>
+</body>
+</html>

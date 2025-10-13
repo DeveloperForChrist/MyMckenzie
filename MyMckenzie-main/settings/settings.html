@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyMcKenzie Settings</title>
+  <link rel="stylesheet" href="../assets/css/settings.css" />
+</head>
+<body>
+  <div class="settings-container">
+
+    <!-- Sidebar -->
+<aside class="sidebar">
+  <h2>Settings</h2>
+  <ul>
+    <li class="active"><a href="settings.html">Account Info</a></li>
+    <li><a href="../billing/billing.html">Renewal/Billing</a></li>
+  </ul>
+</aside>
+
+
+    <!-- Main Settings Panel -->
+    <main class="settings-main">
+      <h1>Account Settings</h1>
+      <p class="desc">Manage your personal details, security, and payment preferences.</p>
+
+      <!-- Account Info -->
+      <section class="settings-section">
+        <h2>Account Information</h2>
+        <form>
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Enter your first name" />
+          </div>
+
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Enter your last name" />
+          </div>
+
+          <div class="form-group full-width">
+            <label>Email</label>
+            <input type="email" placeholder="Enter your email" />
+          </div>
+        </form>
+      </section>
+
+      <!-- Security -->
+      <section class="settings-section">
+        <h2>Security</h2>
+        <form>
+          <div class="form-group">
+            <label>New Password</label>
+            <input type="password" placeholder="Enter new password" />
+          </div>
+
+          <div class="form-group">
+            <label>Confirm Password</label>
+            <input type="password" placeholder="Confirm new password" />
+          </div>
+        </form>
+      </section>
+
+      <!-- Payment Settings -->
+      <section class="settings-section">
+        <h2>Payment Settings</h2>
+        <form>
+          <div class="form-group">
+            <label>Bank Name</label>
+            <input type="text" placeholder="Enter your bank name" />
+          </div>
+
+          <div class="form-group">
+            <label>Account Number</label>
+            <input type="text" placeholder="Enter your account number" />
+          </div>
+
+          <div class="form-group">
+            <label>Sort Code</label>
+            <input type="text" placeholder="Enter your sort code" />
+          </div>
+        </form>
+      </section>
+
+      <!-- Save Button -->
+      <button class="save-btn">Save Changes</button>
+      <button class="delete-btn">Delete Account</button>
+    </main>
+  </div>
+</body>
+</html>
