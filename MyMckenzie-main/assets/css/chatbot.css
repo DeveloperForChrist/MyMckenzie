@@ -63,16 +63,13 @@ header {
   border-radius: var(--border-radius-circle);
   cursor: pointer;
   transition: background 0.3s ease;
-  #stop-button {
-  display: inline-flex !important; /* force it visible */
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-}
-
 #stop-button:hover {
-  background: var(--primary-color-light);
+  background: #333333 !important;
   color: var(--white-color);
 }
 
@@ -305,7 +302,7 @@ header .navbar.scrolled {
 }
 
 .file-upload-wrapper button:hover {
-  color: var(--primary-color-light);
+  color: #333333;
 }
 
 
@@ -402,7 +399,7 @@ header .navbar.scrolled {
 }
 
 .prompt-actions button:hover {
-  background: var(--primary-color-light);
+  background: #333333;
   color: var(--white-color);
   text-shadow: 0 0 2px #E5E7EB;
 }

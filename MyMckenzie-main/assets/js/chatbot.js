@@ -1,4 +1,11 @@
-import { uploadAttachment } from './chatbot-storage.js';
+const uploadAttachment = async (file) => {
+  try {
+    const publicUrl = URL.createObjectURL(file);
+    return { success: true, publicUrl, path: publicUrl, key: null };
+  } catch (e) {
+    return { success: false, error: e?.message || String(e) };
+  }
+};
 
 window.addEventListener("DOMContentLoaded", () => {
 
@@ -18,16 +25,21 @@ window.addEventListener("DOMContentLoaded", () => {
   const deleteChatsButton = document.getElementById("delete-chats-button");
   const sendButton = document.getElementById("send-prompt-button");
   const stopButton = document.getElementById("stop-button"); // Stop button
+  // Allow submission with only attachment by removing HTML5 required attribute if present
+  if (promptInput) { try { promptInput.removeAttribute('required'); } catch (e) {} }
+  // Disable native HTML5 validation that can block submit on empty text input
+  if (promptForm) { try { promptForm.setAttribute('novalidate', ''); } catch (e) {} }
 
   // --- Initial UI State ---
   if (chatContainer) chatContainer.style.display = "none";
   if (sendButton) sendButton.style.display = "none";
   let hasUserStartedChat = false;
+  let isSubmitting = false;
 
   // --- User plan & file limits ---
   const isPremiumUser = window.isPremiumUser === true;
   let freeUserFileCount = 0;
-  const FREE_USER_FILE_LIMIT = 0;
+  const FREE_USER_FILE_LIMIT = 3;
 
   // --- Chat history ---
   const chatHistory = [];
@@ -77,6 +89,102 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       });
     };
   })();
+
+  // --- Attachment text extraction helpers ---
+  const readTextFile = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result || "");
+    reader.onerror = (e) => reject(e);
+    reader.readAsText(file);
+  });
+
+  const loadPdfJs = async () => {
+    if (window.pdfjsLib) return window.pdfjsLib;
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    script.async = true;
+    const loaded = new Promise((resolve, reject) => {
+      script.onload = () => resolve();
+      script.onerror = reject;
+    });
+    document.head.appendChild(script);
+    await loaded;
+    if (window.pdfjsLib) {
+      try {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      } catch (_) {}
+    }
+    return window.pdfjsLib;
+  };
+
+  const extractPdfText = async (file) => {
+    try {
+      const pdfjsLib = await loadPdfJs();
+      if (!pdfjsLib) throw new Error('PDF.js failed to load');
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+      const maxPages = Math.min(pdf.numPages, 30); // safety cap
+      for (let pageNum = 1; pageNum <= maxPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const content = await page.getTextContent();
+        const strings = content.items.map(i => (i.str || '').trim());
+        fullText += strings.join(' ') + '\n\n';
+      }
+      return fullText.trim();
+    } catch (err) {
+      console.error('PDF extract error:', err);
+      return '';
+    }
+  };
+
+  const extractAttachmentText = async (file) => {
+    if (!file) return '';
+    const type = (file.type || '').toLowerCase();
+    const name = (file.name || '').toLowerCase();
+
+    // 1) Plain text
+    if (type.startsWith('text/')) {
+      return await readTextFile(file);
+    }
+
+    // 2) PDF
+    if (type === 'application/pdf' || name.endsWith('.pdf')) {
+      return await extractPdfText(file);
+    }
+
+    // 3) DOCX
+    const isDocx = type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || name.endsWith('.docx');
+    if (isDocx) {
+      try {
+        const loadMammoth = async () => {
+          if (window.mammoth) return window.mammoth;
+          const script = document.createElement('script');
+          script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js';
+          script.async = true;
+          const loaded = new Promise((resolve, reject) => {
+            script.onload = () => resolve();
+            script.onerror = reject;
+          });
+          document.head.appendChild(script);
+          await loaded;
+          return window.mammoth;
+        };
+        const mammoth = await loadMammoth();
+        if (!mammoth) throw new Error('Mammoth failed to load');
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        const text = (result && result.value) ? String(result.value).trim() : '';
+        return text;
+      } catch (err) {
+        console.error('DOCX extract error:', err);
+        return '';
+      }
+    }
+
+    // 4) Fallback: unsupported types (images, etc.)
+    return '';
+  };
 
   // --- Typing effect with stop support ---
   let stopTyping = false; // global flag
@@ -176,6 +284,34 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       if (sendButton) sendButton.style.display = promptInput.value.trim() ? "inline-block" : "none";
     });
     promptInput.addEventListener("focus", activateChat);
+    // Submit on Enter even if the input is empty (when an attachment exists)
+    promptInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        if (promptForm) {
+          if (typeof promptForm.requestSubmit === "function") {
+            promptForm.requestSubmit();
+          } else {
+            // Ensure our submit handler runs even without requestSubmit
+            const evt = new Event('submit', { cancelable: true, bubbles: true });
+            promptForm.dispatchEvent(evt);
+          }
+        }
+      }
+    });
+  }
+
+  // Explicit click handler to force submit via JS submit listener
+  if (sendButton && promptForm) {
+    sendButton.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      if (typeof promptForm.requestSubmit === 'function') {
+        promptForm.requestSubmit();
+      } else {
+        const evt = new Event('submit', { cancelable: true, bubbles: true });
+        promptForm.dispatchEvent(evt);
+      }
+    });
   }
 
   // --- Generate AI response ---
@@ -217,26 +353,54 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
   if (promptForm) {
     promptForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      if (isSubmitting) return;
+      isSubmitting = true;
       const userText = promptInput ? promptInput.value.trim() : "";
-      if (!userText && (!fileInput || !fileInput.files.length)) return;
+      const hasFile = !!(fileInput && fileInput.files && fileInput.files.length);
+      if (!userText && !hasFile) { isSubmitting = false; return; }
 
-  activateChat();
-  const attachmentsArr = attachmentMeta ? [attachmentMeta] : [];
-  appendUserMessage(userText || "[File attached]", attachmentsArr);
-      if (promptInput) promptInput.value = "";
-      if (sendButton) sendButton.style.display = "none";
+      activateChat();
 
-  // If file attached, upload to storage (server-side flow) and include in message metadata
+      // Optimistic user message and processing indicator
       let attachmentMeta = null;
-      if (fileInput && fileInput.files && fileInput.files.length) {
-        const file = fileInput.files[0];
+      let attachmentText = '';
+      let fileName = '';
+      let tempAttachment = null;
+      let processingDiv = null;
+      let file = null;
+
+      if (hasFile) {
+        file = fileInput.files[0];
+        fileName = file.name || 'attachment';
         try {
+          tempAttachment = { url: URL.createObjectURL(file), name: file.name, type: file.type, size: file.size };
+        } catch (_) {}
+      }
+
+      // Show user's message immediately
+      appendUserMessage(userText || "[File attached]", tempAttachment ? [tempAttachment] : []);
+
+      // Show processing indicator while we extract/upload
+      if (hasFile) {
+        processingDiv = appendBotMessage("🔄 Processing attachment...", true);
+      }
+
+      // Perform extraction and upload
+      if (hasFile && file) {
+        try {
+          // Extract text for supported types (text/*, PDF)
+          attachmentText = await extractAttachmentText(file);
+        } catch (ex) {
+          console.warn('Attachment extraction failed:', ex);
+        }
+        try {
+          // Stub upload to get a public-like URL for preview
           const res = await uploadAttachment(file);
           if (res.success) {
             attachmentMeta = { url: res.publicUrl, path: res.path, key: res.key, name: file.name, type: file.type, size: file.size };
           } else {
             console.warn('Attachment upload failed:', res.error);
-            showToast('⚠️ Attachment upload failed. Sending without attachment.');
+            showToast('⚠️ Attachment upload failed. Sending without attachment preview.');
           }
         } catch (err) {
           console.error('Upload error', err);
@@ -244,14 +408,33 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
         }
       }
 
-      // send the message to the AI (or your message save flow) with attachment metadata appended
-      generateResponse(userText || "[File attached]");
+      // Remove processing indicator
+      if (processingDiv && processingDiv.parentNode) {
+        try { processingDiv.remove(); } catch (_) { processingDiv.style.display = 'none'; }
+      }
 
-  // TODO: insert message via server API into `messages` table if desired.
-  // Example: await fetch('/api/messages', { method: 'POST', body: JSON.stringify({ user_id, content: userText, attachments: [attachmentMeta] }) })
+      // Clear UI input state
+      if (promptInput) promptInput.value = "";
+      if (sendButton) sendButton.style.display = "none";
+
+      // Build final prompt with attachment context if present
+      let finalPrompt = userText || (hasFile ? `Please analyze the attached file${fileName ? ` \"${fileName}\"` : ''}.` : '');
+      if (hasFile && attachmentText) {
+        const MAX_ATTACHMENT_CHARS = 12000;
+        const truncated = attachmentText.length > MAX_ATTACHMENT_CHARS
+          ? attachmentText.slice(0, MAX_ATTACHMENT_CHARS) + "\n...[truncated]"
+          : attachmentText;
+        finalPrompt += `\n\nAttachment context (auto-extracted text):\n${truncated}`;
+      } else if (hasFile && !attachmentText) {
+        finalPrompt += `\n\n(Note: This file type is not yet supported for text extraction. Please summarize its key points.)`;
+      }
+
+      // Send to AI
+      generateResponse(finalPrompt || (hasFile ? "[File attached]" : ""));
 
       // clear any attached file after sending
       try { clearAttachment(); } catch (e) {}
+      isSubmitting = false;
     });
   }
 
@@ -318,6 +501,7 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
         filePreview.style.display = 'inline-block';
       }
       if (cancelFileButton) cancelFileButton.style.display = 'inline-block';
+      if (sendButton) sendButton.style.display = 'inline-block';
       if (!isPremiumUser) freeUserFileCount++;
     });
   }
@@ -328,6 +512,7 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       if (filePreview) { filePreview.style.display = "none"; filePreview.innerHTML = ''; }
       cancelFileButton.style.display = "none";
       if (!isPremiumUser && freeUserFileCount > 0) freeUserFileCount--;
+      if (sendButton && (!promptInput || !promptInput.value.trim())) sendButton.style.display = "none";
     });
   }
 
