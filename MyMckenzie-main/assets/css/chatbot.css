@@ -100,7 +100,7 @@ header .navbar.scrolled {
 
 .navbar .nav-logo .logo-text {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  color:rgb(23, 55, 235);
+  color:white;
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
 }
