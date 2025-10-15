@@ -12,7 +12,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // --- DOM Elements ---
   const chatContainer = document.querySelector(".chat-container");
   const promptForm = document.querySelector(".prompt-form");
-  const promptInput = promptForm ? promptForm.querySelector(".prompt-input") : null;
+  const promptInput = promptForm ? promptForm.querySelector(".prompt-input") : null; // textarea
   const appHeader = document.getElementById("app-header");
   const promptMessage = document.getElementById("prompt-message");
 
@@ -35,6 +35,52 @@ window.addEventListener("DOMContentLoaded", () => {
   if (sendButton) sendButton.style.display = "none";
   let hasUserStartedChat = false;
   let isSubmitting = false;
+  let isTypingActive = false;
+
+  // Floating 'scroll to bottom' button
+  const scrollToBottomBtn = document.createElement('button');
+  scrollToBottomBtn.id = 'scroll-to-bottom';
+  scrollToBottomBtn.title = 'Jump to latest';
+  scrollToBottomBtn.innerHTML = '<i class="fa-solid fa-arrow-down"></i>';
+  Object.assign(scrollToBottomBtn.style, {
+    position: 'fixed',
+    right: '24px',
+    width: '48px',
+    height: '48px',
+    borderRadius: '24px',
+    border: 'none',
+    background: '#000',
+    color: '#fff',
+    display: 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: '1001',
+    boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
+    cursor: 'pointer',
+  });
+  document.body.appendChild(scrollToBottomBtn);
+
+  const updateScrollButtonPosition = () => {
+    try {
+      const formHeight = promptForm ? Math.ceil(promptForm.getBoundingClientRect().height) : 56;
+      const offset = Math.max(80, formHeight + 24); // keep above chatbar
+      scrollToBottomBtn.style.bottom = offset + 'px';
+    } catch (_) {}
+  };
+
+  const showScrollToBottom = () => {
+    updateScrollButtonPosition();
+    scrollToBottomBtn.style.display = 'inline-flex';
+  };
+
+  const hideScrollToBottom = () => {
+    scrollToBottomBtn.style.display = 'none';
+  };
+
+  scrollToBottomBtn.addEventListener('click', () => {
+    hideScrollToBottom();
+    scrollToBottom(true);
+  });
 
   // --- User plan & file limits ---
   const isPremiumUser = window.isPremiumUser === true;
@@ -63,8 +109,12 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
 `;
 
   // --- Helper Functions ---
-  const scrollToBottom = () => {
+  const scrollToBottom = (force = false) => {
     if (!chatContainer) return;
+    if (force) {
+      chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: "smooth" });
+      return;
+    }
     const threshold = 50;
     const distanceFromBottom = chatContainer.scrollHeight - chatContainer.clientHeight - chatContainer.scrollTop;
     if (distanceFromBottom < threshold) {
@@ -216,6 +266,11 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     let index = 0;
     let accumulated = "";
     stopTyping = false;
+    isTypingActive = true;
+    try {
+      const dfb = chatContainer ? (chatContainer.scrollHeight - chatContainer.clientHeight - chatContainer.scrollTop) : 0;
+      if (dfb > 80) showScrollToBottom();
+    } catch (_) {}
 
     const typeChunk = () => {
       if (stopTyping) return;
@@ -227,7 +282,9 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       if (index < text.length) {
         setTimeout(typeChunk, Math.floor(Math.random() * 40) + 20);
       } else {
-        targetElement.classList.remove("thinking"); // done typing
+        targetElement.classList.remove("thinking");
+        isTypingActive = false;
+        hideScrollToBottom(); // done typing
       }
     };
     typeChunk();
@@ -239,6 +296,8 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       stopTyping = true;
       const lastBotMessage = document.querySelector(".bot-message.thinking .message-text");
       if (lastBotMessage) lastBotMessage.classList.remove("thinking");
+      isTypingActive = false;
+      hideScrollToBottom();
     });
   }
 
@@ -301,24 +360,70 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     }
   };
 
+  // Auto-resize textarea and Enter/Shift+Enter behavior
+  const updateChatPadding = () => {
+    try {
+      if (!chatContainer) return;
+      const formHeight = promptForm ? promptForm.getBoundingClientRect().height : 0;
+      // base + form height ensures last messages aren't obscured
+      chatContainer.style.paddingBottom = Math.max(120, Math.ceil(formHeight + 60)) + 'px';
+      updateScrollButtonPosition();
+    } catch (_) {}
+  };
+
+  const autoResize = () => {
+    if (!promptInput) return;
+    promptInput.style.height = 'auto';
+    const scrollH = promptInput.scrollHeight;
+    const maxH = 200; // keep in sync with CSS max-height
+    const newH = Math.min(scrollH, maxH);
+    promptInput.style.height = newH + 'px';
+    promptInput.style.overflowY = scrollH > maxH ? 'auto' : 'hidden';
+    updateChatPadding();
+    scrollToBottom();
+  };
+
   if (promptInput) {
-    promptInput.addEventListener("input", () => {
-      if (sendButton) sendButton.style.display = promptInput.value.trim() ? "inline-block" : "none";
-    });
-    promptInput.addEventListener("focus", activateChat);
-    // Submit on Enter even if the input is empty (when an attachment exists)
+    // Ensure textarea behavior for Enter vs Shift+Enter
     promptInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
+      if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         if (promptForm) {
-          if (typeof promptForm.requestSubmit === "function") {
+          if (typeof promptForm.requestSubmit === 'function') {
             promptForm.requestSubmit();
           } else {
-            // Ensure our submit handler runs even without requestSubmit
             const evt = new Event('submit', { cancelable: true, bubbles: true });
             promptForm.dispatchEvent(evt);
           }
         }
+      }
+    });
+
+    promptInput.addEventListener('input', () => {
+      if (sendButton) sendButton.style.display = promptInput.value.trim() ? 'inline-block' : 'none';
+      autoResize();
+    });
+
+    promptInput.addEventListener('focus', () => {
+      activateChat();
+      autoResize();
+    });
+
+    // Initialize height
+    setTimeout(autoResize, 0);
+  }
+
+  window.addEventListener('resize', updateChatPadding);
+
+  // Show a 'scroll to bottom' button when user scrolls away during typing
+  if (chatContainer) {
+    chatContainer.addEventListener('scroll', () => {
+      const distanceFromBottom = chatContainer.scrollHeight - chatContainer.clientHeight - chatContainer.scrollTop;
+      const away = distanceFromBottom > 80;
+      if (isTypingActive && away) {
+        showScrollToBottom();
+      } else {
+        hideScrollToBottom();
       }
     });
   }
@@ -351,12 +456,9 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
 
       for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
         try {
-          // Update status text
-          const status = mi > 0 ? `💬 Trying ${model} (fallback) — attempt ${attempt + 1}...` : `💬 ${model} — attempt ${attempt + 1}...`;
-          if (botDiv) {
-            const el = botDiv.querySelector('.message-text');
-            if (el) el.textContent = status;
-          }
+          // Keep UI as 'Thinking...' while trying models; log status to console for debugging
+          const status = mi > 0 ? `Trying ${model} (fallback) — attempt ${attempt + 1}...` : `${model} — attempt ${attempt + 1}...`;
+          try { console.debug('Model status:', status); } catch (_) {}
 
           const response = await fetch(makeApiUrl(model), {
             method: "POST",
@@ -475,7 +577,10 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       }
 
       // Clear UI input state
-      if (promptInput) promptInput.value = "";
+      if (promptInput) {
+        promptInput.value = "";
+        autoResize();
+      }
       if (sendButton) sendButton.style.display = "none";
 
       // Build final prompt with attachment context if present
@@ -509,6 +614,7 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       // clear any attached file after sending
       try { clearAttachment(); } catch (e) {}
       isSubmitting = false;
+      updateChatPadding();
     });
   }
 

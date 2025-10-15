@@ -183,6 +183,15 @@ header .navbar.scrolled {
   padding: 1rem;
   padding-bottom: 120px; /* extra space for fixed input bar */
   max-height: calc(100vh - 0px); /* ensure full viewport height */
+  -ms-overflow-style: none; /* IE/Edge hide scrollbar */
+  scrollbar-width: none; /* Firefox hide scrollbar */
+}
+
+/* Hide scrollbar in WebKit while retaining scroll behavior */
+.container .chat-container::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 /* Message row layout */
@@ -342,7 +351,7 @@ header .navbar.scrolled {
 .prompt-wrapper {
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: flex-end; /* keep bin aligned to bottom like other buttons */
   max-width: 700px;
   margin: 0 auto;
 }
@@ -351,27 +360,42 @@ header .navbar.scrolled {
 .prompt-form {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: center; /* center vertically overall */
   background: var(--black-color);
-  border-radius: 130px;
-  padding: 0 12px;
-  height: 56px;
+  border-radius: 20px;
+  padding: 8px 12px; /* room for multiline textarea */
+  min-height: 56px; /* base height */
+  gap: 8px; /* space between left button, file preview, and textarea */
 }
-.file-upload-wrapper { display:inline-block; margin-left:8px; }
+.file-upload-wrapper { display:inline-block; align-self: flex-end; margin-bottom: 4px; }
 .file-upload-wrapper input[type="file"] { display:none; }
 .filepreview { display:none; background:#fff; color:#000; padding:6px 8px; border-radius:6px; margin-left:6px; font-size:13px; }
 #cancel-file-button { display:none; margin-left:6px; background:#fff; border:none; color:#000; border-radius:6px; padding:6px; cursor:pointer; }
 
-/* Input field */
+/* Input field (textarea, auto-expanding) */
 .prompt-input {
   flex: 1;
+  align-self: center; /* center vertically with the row */
   background: none;
   border: none;
   color: var(--white-color);
   font-size: var(--font-size-l);
-  padding-left: 12px;
+  padding: 10px 0; /* vertical padding only so text is truly centered */
   min-width: 0;
   outline: none;
+  line-height: 1.4;
+  max-height: 200px; /* cap total growth */
+  overflow-y: hidden; /* controlled via JS */
+  resize: none; /* user doesn't manually resize */
+  -ms-overflow-style: none; /* IE/Edge hide scrollbar */
+  scrollbar-width: none; /* Firefox hide scrollbar */
+}
+
+/* Hide textarea scrollbar in WebKit while retaining scroll behavior */
+.prompt-input::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 .prompt-input::placeholder {
@@ -383,10 +407,14 @@ header .navbar.scrolled {
 .prompt-actions {
   display: flex;
   gap: 8px; /* spacing between buttons */
+  align-self: flex-end; /* stick to bottom of form next to textarea */
+  padding-bottom: 4px;
+  margin-left: auto; /* push actions to the far right */
 }
 
 /* All buttons inside prompt-actions */
-.prompt-actions button {
+.prompt-actions button,
+#add-file-button {
   width: 56px;
   height: 56px;
   border-radius: var(--border-radius-circle);
@@ -398,6 +426,15 @@ header .navbar.scrolled {
   background: var(--black-color);
   color: var(--white-color);
   transition: background 0.3s ease;
+}
+
+#add-file-button:hover {
+  background: #333333;
+}
+
+#add-file-button {
+  align-self: flex-end;
+  margin-bottom: 4px; /* baseline align with right-side buttons */
 }
 
 .prompt-actions button:hover {
@@ -420,6 +457,28 @@ header .navbar.scrolled {
   display: inline-flex;
 }
 
+/* Delete bin button */
+#delete-chats-button {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--border-radius-circle);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black-color);
+  color: var(--white-color);
+  transition: background 0.3s ease;
+  flex: 0 0 auto; /* do not grow */
+}
+
+#delete-chats-button:hover {
+  background: #333333;
+  color: var(--white-color);
+  text-shadow: 0 0 2px #E5E7EB;
+}
+
 /* ===========================
    Disclaimer Text
 =========================== */
@@ -435,7 +494,12 @@ header .navbar.scrolled {
   .chat-container {
     padding-bottom: 240px; /* extra space for mobile keyboards */
   }
-  .prompt-actions button {
+  .prompt-actions button,
+  #add-file-button {
+    width: 48px;
+    height: 48px;
+  }
+  #delete-chats-button {
     width: 48px;
     height: 48px;
   }
