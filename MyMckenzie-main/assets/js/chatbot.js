@@ -13,6 +13,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const chatContainer = document.querySelector(".chat-container");
   const promptForm = document.querySelector(".prompt-form");
   const promptInput = promptForm ? promptForm.querySelector(".prompt-input") : null; // textarea
+  const promptContainerEl = document.querySelector('.prompt-container');
   const appHeader = document.getElementById("app-header");
   const promptMessage = document.getElementById("prompt-message");
 
@@ -36,6 +37,18 @@ window.addEventListener("DOMContentLoaded", () => {
   let hasUserStartedChat = false;
   let isSubmitting = false;
   let isTypingActive = false;
+
+  // Inject minimal CSS for formatted headings in bot messages
+  try {
+    const headingCss = `
+.message-text .msg-heading{display:block;margin:10px 0 6px;font-weight:700;color:var(--white-color);} 
+.message-text .msg-heading.level-1{font-size:1.1rem;border-bottom:1px solid var(--border-color);padding-bottom:4px;margin-top:12px;} 
+.message-text .msg-heading.level-2{font-size:1.05rem;margin-top:10px;} 
+.message-text .msg-heading.level-3{font-size:1rem;margin-top:8px;opacity:0.95;}`;
+    const styleEl = document.createElement('style');
+    styleEl.textContent = headingCss;
+    document.head.appendChild(styleEl);
+  } catch(_) {}
 
   // Floating 'scroll to bottom' button
   const scrollToBottomBtn = document.createElement('button');
@@ -62,8 +75,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const updateScrollButtonPosition = () => {
     try {
-      const formHeight = promptForm ? Math.ceil(promptForm.getBoundingClientRect().height) : 56;
-      const offset = Math.max(80, formHeight + 24); // keep above chatbar
+      const barH = promptContainerEl ? Math.ceil(promptContainerEl.getBoundingClientRect().height) : (promptForm ? Math.ceil(promptForm.getBoundingClientRect().height) : 56);
+      const offset = Math.max(80, barH + 24); // keep above chatbar
       scrollToBottomBtn.style.bottom = offset + 'px';
     } catch (_) {}
   };
@@ -145,6 +158,21 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       });
     };
   })();
+
+  // Convert simple markdown-like headings/bold to clean HTML
+  const styleBotHtml = (html) => {
+    if (!html) return "";
+    let out = html;
+    // Headings: lines starting with #, ##, ### -> styled blocks
+    out = out.replace(/^\s*###\s+(.+)$/gm, '<div class="msg-heading level-3">$1<\/div>');
+    out = out.replace(/^\s*##\s+(.+)$/gm, '<div class="msg-heading level-2">$1<\/div>');
+    out = out.replace(/^\s*#\s+(.+)$/gm, '<div class="msg-heading level-1">$1<\/div>');
+    // Single-line strong-only headings: **Heading** on its own line -> heading block
+    out = out.replace(/^\s*\*\*(.+?)\*\*\s*$/gm, '<div class="msg-heading">$1<\/div>');
+    // Inline bold: **text** -> <strong>
+    out = out.replace(/\*\*(.+?)\*\*/g, '<strong>$1<\/strong>');
+    return out;
+  };
 
   // --- Attachment text extraction helpers ---
   const readTextFile = (file) => new Promise((resolve, reject) => {
@@ -278,10 +306,16 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
       accumulated += text.slice(index, index + chunkSize);
       index += chunkSize;
       targetElement.innerHTML = linkify(accumulated);
+      updateChatPadding();
       scrollToBottom();
       if (index < text.length) {
         setTimeout(typeChunk, Math.floor(Math.random() * 40) + 20);
       } else {
+        // Final render: convert markdown-like headings/bold to clean HTML
+        try {
+          const finalHtml = styleBotHtml(linkify(text));
+          targetElement.innerHTML = finalHtml;
+        } catch (_) {}
         targetElement.classList.remove("thinking");
         isTypingActive = false;
         hideScrollToBottom(); // done typing
@@ -326,6 +360,7 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     }
     const botDiv = createMsgElement(html, ...classes);
     chatContainer.appendChild(botDiv);
+    updateChatPadding();
     scrollToBottom();
     return botDiv;
   };
@@ -346,6 +381,7 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     }
     const userDiv = createMsgElement(html, "user-message");
     chatContainer.appendChild(userDiv);
+    updateChatPadding();
     scrollToBottom();
     return userDiv;
   };
@@ -364,9 +400,10 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
   const updateChatPadding = () => {
     try {
       if (!chatContainer) return;
-      const formHeight = promptForm ? promptForm.getBoundingClientRect().height : 0;
-      // base + form height ensures last messages aren't obscured
-      chatContainer.style.paddingBottom = Math.max(120, Math.ceil(formHeight + 60)) + 'px';
+      const barH = promptContainerEl ? Math.ceil(promptContainerEl.getBoundingClientRect().height) : (promptForm ? Math.ceil(promptForm.getBoundingClientRect().height) : 0);
+      const pad = Math.max(120, barH + 24);
+      chatContainer.style.paddingBottom = pad + 'px';
+      chatContainer.style.scrollPaddingBottom = pad + 'px';
       updateScrollButtonPosition();
     } catch (_) {}
   };
@@ -414,6 +451,8 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
   }
 
   window.addEventListener('resize', updateChatPadding);
+  // Initialize padding after DOM ready
+  setTimeout(updateChatPadding, 0);
 
   // Show a 'scroll to bottom' button when user scrolls away during typing
   if (chatContainer) {
