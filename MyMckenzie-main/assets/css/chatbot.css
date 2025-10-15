@@ -107,6 +107,8 @@ header .navbar.scrolled {
 
 .nav-logo{
   pointer-events: none;   /* disables all mouse events */
+  -webkit-user-select: none; /* Safari 3+, iOS 3+ */
+  -ms-user-select: none; /* IE/Edge */
   user-select: none; 
 }
 

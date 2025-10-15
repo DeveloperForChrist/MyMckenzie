@@ -46,9 +46,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // --- Gemini API config ---
   const API_KEY = "AIzaSyArGnZbyf9Ot3N4mo85VT8K0shIrGDyJB8";
-  const API_URL = API_KEY
-    ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${API_KEY}`
-    : "/api/generate";
+  const GEM_MODELS = [
+    "gemini-2.5-flash-lite",
+    "gemini-1.5-flash",
+    "gemini-1.5-pro"
+  ];
+  const makeApiUrl = (model) =>
+    API_KEY
+      ? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`
+      : `/api/generate?model=${encodeURIComponent(model)}`;
 
   const systemPrompt = `
 You are MyMcKenzie AI — an intelligent UK-based legal assistant.
@@ -96,6 +102,22 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     reader.onload = () => resolve(reader.result || "");
     reader.onerror = (e) => reject(e);
     reader.readAsText(file);
+  });
+
+  // Read any file as base64 (without data: prefix)
+  const readFileAsBase64 = (file) => new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const res = reader.result || '';
+        const base64 = String(res).split(',')[1] || '';
+        resolve(base64);
+      } catch (_) {
+        resolve('');
+      }
+    };
+    reader.onerror = () => resolve('');
+    reader.readAsDataURL(file);
   });
 
   const loadPdfJs = async () => {
@@ -315,38 +337,77 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
   }
 
   // --- Generate AI response ---
-  const generateResponse = async (userMessage) => {
+  const generateResponse = async (userParts) => {
     const botDiv = appendBotMessage("💬 Thinking...", true);
-    chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+    const parts = Array.isArray(userParts) ? userParts : [{ text: String(userParts || '') }];
+    chatHistory.push({ role: "user", parts });
 
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            { role: "user", parts: [{ text: systemPrompt }] },
-            ...chatHistory
-          ]
-        })
-      });
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    let lastErr = null;
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error?.message || "Unknown error");
+    for (let mi = 0; mi < GEM_MODELS.length; mi++) {
+      const model = GEM_MODELS[mi];
+      const MAX_RETRIES = 2; // per model
 
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "⚠️ No response received.";
-      chatHistory.push({ role: "model", parts: [{ text: reply }] });
+      for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+        try {
+          // Update status text
+          const status = mi > 0 ? `💬 Trying ${model} (fallback) — attempt ${attempt + 1}...` : `💬 ${model} — attempt ${attempt + 1}...`;
+          if (botDiv) {
+            const el = botDiv.querySelector('.message-text');
+            if (el) el.textContent = status;
+          }
 
-      const target = botDiv ? botDiv.querySelector(".message-text") : null;
-      typingEffect(reply, target);
+          const response = await fetch(makeApiUrl(model), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [
+                { role: "user", parts: [{ text: systemPrompt }] },
+                ...chatHistory
+              ]
+            })
+          });
 
-    } catch (err) {
-      if (botDiv && botDiv.querySelector(".message-text")) {
-        botDiv.querySelector(".message-text").textContent = `⚠️ Error: ${err.message || err}`;
+          const data = await response.json();
+          if (!response.ok) {
+            const msg = data?.error?.message || `HTTP ${response.status}`;
+            const overloaded = response.status === 429 || response.status === 503 || /overload|busy|try again later/i.test(msg);
+            if (overloaded && attempt < MAX_RETRIES) {
+              await sleep(400 * Math.pow(2, attempt));
+              continue; // retry same model
+            }
+            lastErr = new Error(msg);
+            if (overloaded) break; // try next model
+            throw lastErr; // non-overload error: bail out
+          }
+
+          const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "⚠️ No response received.";
+          chatHistory.push({ role: "model", parts: [{ text: reply }] });
+
+          const target = botDiv ? botDiv.querySelector(".message-text") : null;
+          typingEffect(reply, target);
+          return;
+        } catch (err) {
+          lastErr = err;
+          const msg = String(err && err.message || err || '');
+          const isNetwork = /Failed to fetch|NetworkError|network/i.test(msg);
+          if (isNetwork && attempt < MAX_RETRIES) {
+            await sleep(400 * Math.pow(2, attempt));
+            continue;
+          }
+          // Move to next model
+          break;
+        }
       }
-      console.error("Gemini Error:", err);
-      scrollToBottom();
     }
+
+    // Final failure
+    if (botDiv && botDiv.querySelector(".message-text")) {
+      botDiv.querySelector(".message-text").textContent = "⚠️ The service is overloaded or unavailable. Please try again in a minute.";
+    }
+    console.error("Gemini Error:", lastErr);
+    scrollToBottom();
   };
 
   // --- Form submit ---
@@ -429,8 +490,21 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
         finalPrompt += `\n\n(Note: This file type is not yet supported for text extraction. Please summarize its key points.)`;
       }
 
+      // Build content parts for the user message (text + optional inline image)
+      let userParts = [{ text: finalPrompt || (hasFile ? "[File attached]" : "") }];
+      if (hasFile && file && file.type && file.type.startsWith('image/')) {
+        try {
+          const base64Data = await readFileAsBase64(file);
+          if (base64Data) {
+            userParts.push({ inline_data: { mime_type: file.type, data: base64Data } });
+          }
+        } catch (e) {
+          console.warn('Image base64 read failed:', e);
+        }
+      }
+
       // Send to AI
-      generateResponse(finalPrompt || (hasFile ? "[File attached]" : ""));
+      generateResponse(userParts);
 
       // clear any attached file after sending
       try { clearAttachment(); } catch (e) {}
