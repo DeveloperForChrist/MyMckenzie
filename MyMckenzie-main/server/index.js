@@ -10,9 +10,21 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const { Pool } = require('pg');
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 8000;
 const ROOT = path.resolve(__dirname, '..'); // MyMckenzie-main
+
+// Database config
+const DEFAULT_DB_URL = 'postgres://postgres:Pentagon100@localhost:2003/postgres?sslmode=disable';
+const DATABASE_URL = process.env.DATABASE_URL || DEFAULT_DB_URL;
+let pool = null;
+function getPool() {
+  if (!pool) {
+    pool = new Pool({ connectionString: DATABASE_URL, ssl: false, max: 5 });
+  }
+  return pool;
+}
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -79,6 +91,18 @@ const server = http.createServer((req, res) => {
   if (pathname === '/api/health') {
     return sendJson(res, 200, { status: 'ok', time: new Date().toISOString() });
   }
+  if (pathname === '/api/db/health') {
+    (async () => {
+      try {
+        const p = getPool();
+        const r = await p.query('SELECT now() AS now');
+        return sendJson(res, 200, { ok: true, now: r.rows[0].now, db: 'postgres' });
+      } catch (e) {
+        return sendJson(res, 500, { ok: false, error: String(e && e.message || e) });
+      }
+    })();
+    return;
+  }
   if (pathname === '/api/echo' && method === 'POST') {
     let body = '';
     req.on('data', chunk => { body += chunk; if (body.length > 1e6) req.destroy(); });
@@ -102,6 +126,13 @@ const server = http.createServer((req, res) => {
   serveFile(req, res, candidate);
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, async () => {
   console.log(`MyMcKenzie dynamic server listening on http://localhost:${PORT}`);
+  try {
+    const p = getPool();
+    const r = await p.query('SELECT now()');
+    console.log('DB connected. Time:', r.rows[0].now);
+  } catch (e) {
+    console.warn('DB connection failed at startup:', e && e.message || e);
+  }
 });
