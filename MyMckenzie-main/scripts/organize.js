@@ -12,7 +12,7 @@ function destinationFor(filename) {
   if (name === 'home.html') return { dir: '.', name: 'index.html' };
   if (name.includes('signin') || name.includes('signup') || name.includes('friend-signup')) return { dir: 'auth', name: filename };
   if (name.includes('user-dashboard')) return { dir: 'dashboard', name: filename };
-  if (name.includes('friend-dashboard') || name.includes('mckenzie-friend')) return { dir: 'friend', name: filename };
+  if (name.includes('friend-Dashboard') || name.includes('mckenzie-friend')) return { dir: 'friend', name: filename };
   if (name.includes('joinmckenzie') || name === 'join.html') return { dir: 'join', name: filename };
   if (name.includes('chatbot')) return { dir: 'chatbot', name: filename };
   if (name.includes('bill') || name.includes('billing')) return { dir: 'billing', name: filename };

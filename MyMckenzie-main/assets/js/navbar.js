@@ -18,8 +18,8 @@ function updateNavbar(user) {
     // User is signed in, fetch profile
     getDoc(doc(db, 'users', user.uid)).then((userDoc) => {
       const userData = userDoc.data();
-      const displayName = userData?.name || user.email; // Use name if available, else email
-      const role = userData?.role || 'user'; // default to 'user' if no role
+      const displayName = (userData?.firstName || user.email).charAt(0).toUpperCase() + (userData?.firstName || user.email).slice(1); // Capitalize first letter
+      const role = userData?.role || 'user';
 
       // Determine dashboard URL based on role
       let dashboardUrl = '../dashboard/user-dashboard.html'; // default
@@ -35,7 +35,6 @@ function updateNavbar(user) {
       navMenu.innerHTML = `
         <li class="nav-item user-menu">
           <button class="user-menu-toggle" id="user-menu-toggle">
-            <div class="user-avatar">${displayName.charAt(0).toUpperCase()}</div>
             ${displayName}
           </button>
           <ul class="dropdown-menu" id="dropdown-menu">

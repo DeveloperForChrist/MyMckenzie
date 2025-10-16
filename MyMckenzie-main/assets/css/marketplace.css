@@ -1,4 +1,4 @@
-/* Import Google Font */
+first name email or cir/* Import Google Font */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
 
 /* Global Styles */
@@ -22,6 +22,19 @@ header {
   padding: 40px 20px 20px 20px;
 }
 
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-text {
+  flex: 1;
+  text-align: left;
+}
+
 header h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
@@ -30,6 +43,27 @@ header h1 {
 header p {
   font-size: 1.1rem;
   color: #ddd;
+  margin-bottom: 0;
+}
+
+/* Send to Portal Button */
+.send-portal-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+.send-portal-btn:hover {
+  background: #218838;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 /* Profiles Container */
@@ -100,10 +134,221 @@ header p {
   box-shadow: 0 5px 20px rgba(0,0,0,0.3);
 }
 
+/* Case card specific styles */
+.case-card {
+  border-left: 4px solid #a78bfa;
+}
+
+.case-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.case-header h3 {
+  margin: 0;
+  color: #a78bfa;
+  font-size: 1.2rem;
+}
+
+.case-time {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: normal;
+}
+
+.case-description {
+  color: #ddd;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.case-meta {
+  margin-bottom: 15px;
+}
+
+.case-meta p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.accept-case-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+}
+
+.accept-case-btn:hover {
+  background: #218838;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Portal Modal Styles */
+.portal-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.portal-modal-content {
+  background-color: #3b1d5a;
+  margin: 5% auto;
+  padding: 0;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 600px;
+  color: white;
+}
+
+.portal-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid #a78bfa;
+}
+
+.portal-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.portal-modal-close {
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #ddd;
+}
+
+.portal-modal-close:hover {
+  color: white;
+}
+
+.portal-modal-body {
+  padding: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #ddd;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #a78bfa;
+  border-radius: 8px;
+  background-color: #2e1a47;
+  color: white;
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.3);
+}
+
+.portal-info {
+  background-color: #2e1a47;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+
+.portal-info h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #a78bfa;
+}
+
+.portal-info p {
+  margin: 8px 0;
+  font-size: 0.95rem;
+  color: #ddd;
+}
+
+.portal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+}
+
+.portal-cancel-btn,
+.portal-submit-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.portal-cancel-btn {
+  background-color: #666;
+  color: white;
+}
+
+.portal-cancel-btn:hover {
+  background-color: #888;
+}
+
+.portal-submit-btn {
+  background-color: #a78bfa;
+  color: white;
+}
+
+.portal-submit-btn:hover {
+  background-color: #ffffff;
+  color: #3b1d5a;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .profile-card {
     width: 45%;
+  }
+
+  .portal-modal-content {
+    margin: 10% auto;
+    width: 95%;
+  }
+
+  .portal-modal-header,
+  .portal-modal-body {
+    padding: 20px;
+  }
+
+  .portal-actions {
+    flex-direction: column;
+  }
+
+  .portal-cancel-btn,
+  .portal-submit-btn {
+    width: 100%;
   }
 }
 

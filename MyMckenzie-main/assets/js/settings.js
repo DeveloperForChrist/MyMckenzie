@@ -1,11 +1,13 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-import { getAuth, onAuthStateChanged, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { getAuth, onAuthStateChanged, updatePassword, reauthenticateWithCredential, EmailAuthProvider, signOut } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { getStorage, ref, deleteObject } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-storage.js';
 import { firebaseConfig } from './firebaseConfig.js';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 let currentUser = null;
 
@@ -89,15 +91,29 @@ async function deleteAccount() {
   }
 
   try {
+    // Get user data to check for profile picture
+    const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+    const userData = userDoc.data();
+
+    // Delete profile picture from Firebase Storage if exists
+    if (userData && userData.profilePictureUrl) {
+      try {
+        const storageRef = ref(storage, userData.profilePictureUrl);
+        await deleteObject(storageRef);
+      } catch (storageError) {
+        console.warn('Error deleting profile picture:', storageError);
+        // Continue with account deletion even if storage deletion fails
+      }
+    }
+
     // Delete user document from Firestore
-    await updateDoc(doc(db, 'users', currentUser.uid), {
-      deleted: true,
-      deletedAt: new Date()
-    });
+    await deleteDoc(doc(db, 'users', currentUser.uid));
 
     // Delete user from Firebase Auth
     await currentUser.delete();
 
+    // Sign out and redirect
+    await signOut(auth);
     alert('Account deleted successfully.');
     window.location.href = '../auth/signin.html';
   } catch (error) {
@@ -105,7 +121,6 @@ async function deleteAccount() {
     alert('Error deleting account. Please try again.');
   }
 }
-
 // Go to dashboard
 function goToDashboard() {
   if (currentUser) {

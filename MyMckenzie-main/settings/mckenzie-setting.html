@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../assets/css/settings.css" />
   <link rel="stylesheet" href="../assets/css/user-dashboard.css" />
   <script type="module" src="../assets/js/navbar.js"></script>
+  <script type="module" src="../assets/js/settings.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('go-to-dashboard-btn').addEventListener('click', () => {
@@ -41,15 +42,15 @@
         <form>
           <div class="form-group">
             <label>First Name</label>
-            <input type="text" placeholder="Enter your first name" />
+            <input type="text" id="first-name" placeholder="Enter your first name" />
           </div>
           <div class="form-group">
             <label>Last Name</label>
-            <input type="text" placeholder="Enter your last name" />
+            <input type="text" id="last-name" placeholder="Enter your last name" />
           </div>
           <div class="form-group full-width">
             <label>Email</label>
-            <input type="email" placeholder="Enter your email" />
+            <input type="email" id="email" placeholder="Enter your email" />
           </div>
         </form>
       </section>
@@ -60,16 +61,18 @@
         <form>
           <div class="form-group">
             <label>New Password</label>
-            <input type="password" placeholder="Enter new password" />
+            <input type="password" id="new-password" placeholder="Enter new password" />
           </div>
           <div class="form-group">
             <label>Confirm Password</label>
-            <input type="password" placeholder="Confirm new password" />
+            <input type="password" id="confirm-password" placeholder="Confirm new password" />
           </div>
         </form>
       </section>
 
       <button class="save-btn">Save Changes</button>
+      <button class="delete-btn" id="change-password-btn">Change Password</button>
+      <button class="delete-btn">Delete Account</button>
     </main>
 
   </div>

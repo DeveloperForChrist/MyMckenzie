@@ -1,6 +1,11 @@
-# TODO: Fix McKenzie Friend Registration
-
-## Steps to Complete
-- [x] Edit MyMckenzie-main/assets/js/Friend-Signup.js to remove 'experience' field reference, add localStorage setting, background email verification, and redirect to dashboard after registration.
-- [ ] Test registration flow: Open Friend-Signup.html, submit form, verify Firebase user/doc creation, localStorage set, and redirect to friend-Dashboard.html.
-- [ ] Verify sign-in works for existing McKenzie users.
+- [x] Update MyMckenzie-main/assets/css/style.css to add font-size: x-large; font-weight: bold; to .navbar.logged-in .user-menu-toggle
+- [x] Update MyMckenzie-main/assets/css/friend-Dashboard.css to add font-size: x-large; font-weight: bold; to .navbar.logged-in .user-menu-toggle
+- [x] Update MyMckenzie-main/assets/css/user-dashboard.css to add font-size: x-large; font-weight: bold; to .navbar.logged-in .user-menu-toggle
+- [x] Update MyMckenzie-main/assets/css/chatbot.css to add font-size: x-large; font-weight: bold; to .navbar.logged-in .user-menu-toggle
+- [x] Update settings.js to use deleteDoc, add Storage deletion, ensure sign out
+- [x] Add IDs to form fields in mckenzie-setting.html
+- [x] Add delete button to mckenzie-setting.html
+- [x] Include settings.js script in mckenzie-setting.html
+- [x] Fix navbar.js to link MyMckenzie logo to dashboard when signed in
+- [x] Redesign friend-Dashboard with light theme, purple navbar header, and clean white cards
+- [ ] Clean up the entire MyMckenzie-main folder: remove unused files, organize into logical folders, add comments to code files for better supervision

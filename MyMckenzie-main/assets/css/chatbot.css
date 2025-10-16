@@ -235,6 +235,14 @@ header .navbar.scrolled {
   transform: translateY(3px);   /* moves button down */
 }
 
+/* User menu toggle styling for logged-in navbar */
+.navbar.logged-in .user-menu-toggle {
+  font-size: x-large;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
 .container {
   padding: 100px 0 0; /* account for fixed navbar; bottom spacing handled by chat list */
   background: var(--background-color);
