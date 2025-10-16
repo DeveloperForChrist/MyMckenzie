@@ -10,7 +10,7 @@
   <!-- Font Awesome (for notification bell) -->
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" href="../assets/css/user-dashboard.css" />
+  <link rel="stylesheet" href="../assets/css/friend-Dashboard.css" />
   <title>MyMcKenzie User Hub</title>
 </head>
 <body>
@@ -22,54 +22,58 @@
       <ul id="nav-menu" class="nav-menu"></ul>
     </nav>
   </header>
-    <main>
-  <h1>Hello,</h1>
-  <p>This is your personalized MyMcKenzie dashboard.</p>
+  <main>
+    <div class="dashboard-header">
+      <h1>Welcome back</h1>
+      <p>Manage your conversations, documents, and account.</p>
+    </div>
 
-  <!-- Top row: 3 cards -->
-  <!-- Top row: 3 cards -->
-<div class="dashboard-cards">
-  <a href="../dashboard/conversation.html" class="card">
-    <i class='bx bx-chat'></i>
-    <h3>Conversation</h3>
-    <p>View your chat history</p>
-  </a>
+    <div class="dashboard-content">
+      <div class="action-section">
+        <h2>Quick Actions</h2>
+        <div class="action-cards">
+          <a href="../dashboard/conversation.html" class="action-card">
+            <i class='bx bx-chat'></i>
+            <h4>Conversation</h4>
+            <p>View your chat history</p>
+          </a>
+          <a href="../dashboard/documents.html" class="action-card">
+            <i class='bx bx-file'></i>
+            <h4>Documents</h4>
+            <p>Access your recent uploads</p>
+          </a>
+          <a href="../marketplace/marketplace.html" class="action-card">
+            <i class='bx bx-group'></i>
+            <h4>Find McKenzie Friends</h4>
+            <p>Discover and connect</p>
+          </a>
+          <a href="../contact/Contact.html" class="action-card">
+            <i class='bx bx-envelope'></i>
+            <h4>Contact Us</h4>
+            <p>Send us your inquiries</p>
+          </a>
+        </div>
+      </div>
 
-  <a href="../marketplace/marketplace.html" class="card">
-    <i class='bx bx-group'></i>
-    <h3>McKenzie Friends</h3>
-    <p>Find and connect</p>
-  </a>
+      <div class="profile-section">
+        <h2>Account Management</h2>
+        <div class="profile-cards">
+          <a href="../settings/settings.html" class="profile-card">
+            <i class='bx bx-cog'></i>
+            <h4>Settings</h4>
+            <p>Manage your preferences</p>
+          </a>
+        </div>
+      </div>
+    </div>
 
-  <a href="../settings/settings.html" class="card">
-    <i class='bx bx-cog'></i>
-    <h3>Settings</h3>
-    <p>Manage your preferences</p>
-  </a>
-</div>
-
-<!-- Bottom row: 2 cards -->
-<div class="dashboard-cards">
-  <a href="../dashboard/documents.html" class="card">
-    <i class='bx bx-file'></i>
-    <h3>View Documents</h3>
-    <p>Access your recent uploads</p>
-  </a>
-
-  <a href="../contact/Contact.html" class="card">
-    <i class='bx bx-envelope'></i>
-    <h3>Contact Us</h3>
-    <p>Send us your inquiries</p>
-  </a>
-</div>
-
-  <!-- Talk button below -->
-  <div class="talk-btn-container">
-    <button class="talk-btn">Talk with MyMcKenzie</button>
-  </div>
-
-
-</section>
+    <div class="talk-btn-container">
+      <button class="talk-btn">
+        <i class='bx bx-message-dots'></i>
+        Talk with MyMcKenzie
+      </button>
+    </div>
+  </main>
 
  
   <script type="module" src="../assets/js/navbar.js"></script>

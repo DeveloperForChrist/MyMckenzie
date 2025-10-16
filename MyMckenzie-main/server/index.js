@@ -5,18 +5,40 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+try { require('dotenv').config(); } catch {}
 const admin = require('firebase-admin');
 
-// Initialize Firebase Admin
-const serviceAccount = require('./firebase-service-account.json'); // Ensure this file exists with your service account key
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://webbase-f259b.firebaseio.com', // Update with your Firebase project URL
-  storageBucket: 'webbase-f259b.firebasestorage.app' // Update with your storage bucket
-});
-
-const auth = admin.auth();
-const db = admin.firestore();
+// Initialize Firebase Admin (optional for local static mode)
+let auth = null;
+let db = null;
+let HAS_FIREBASE = false;
+let serviceAccount = null;
+try {
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+    try {
+      serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+    } catch (err) {
+      console.warn('[server] Invalid FIREBASE_SERVICE_ACCOUNT_JSON:', err.message);
+    }
+  } else {
+    // Fallback to local file if present
+    serviceAccount = require('./firebase-service-account.json');
+  }
+  if (serviceAccount) {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      databaseURL: process.env.FIREBASE_DATABASE_URL || 'https://webbase-f259b.firebaseio.com',
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'webbase-f259b.firebasestorage.app',
+    });
+    auth = admin.auth();
+    db = admin.firestore();
+    HAS_FIREBASE = true;
+  } else {
+    throw new Error('Service account not available');
+  }
+} catch (e) {
+  console.warn('[server] Firebase Admin not configured; running in static-only mode.');
+}
 
 // ==========================
 // Server configuration
@@ -128,6 +150,7 @@ const server = http.createServer((req, res) => {
   if (pathname === '/api/auth/signup' && method === 'POST') {
     (async () => {
       try {
+        if (!HAS_FIREBASE) return sendJson(res, 501, { error: 'Auth endpoints disabled: Firebase not configured' });
         const data = await readJsonBody(req);
         const firstName = (data.firstName || '').toString().trim();
         const lastName = (data.lastName || '').toString().trim();
@@ -174,6 +197,7 @@ const server = http.createServer((req, res) => {
   if (pathname === '/api/auth/mckenzie-signup' && method === 'POST') {
     (async () => {
       try {
+        if (!HAS_FIREBASE) return sendJson(res, 501, { error: 'Auth endpoints disabled: Firebase not configured' });
         const data = await readJsonBody(req);
         const firstName = (data.firstName || '').toString().trim();
         const lastName = (data.lastName || '').toString().trim();
@@ -240,9 +264,12 @@ const server = http.createServer((req, res) => {
   if (pathname === '/api/db/health') {
     (async () => {
       try {
+        if (!HAS_FIREBASE) {
+          return sendJson(res, 200, { status: 'ok', mode: 'static' });
+        }
         // Simple Firestore connectivity check
         const testDoc = await db.collection('health').doc('check').get();
-        return sendJson(res, 200, { status: 'ok' });
+        return sendJson(res, 200, { status: 'ok', mode: 'firebase' });
       } catch (err) {
         return sendJson(res, 500, { status: 'error', error: String(err.message || err) });
       }
@@ -251,7 +278,7 @@ const server = http.createServer((req, res) => {
   }
 
   if (pathname === '/api/db/version') {
-    return sendJson(res, 200, { version: 'Firebase' });
+    return sendJson(res, 200, { version: HAS_FIREBASE ? 'Firebase' : 'static' });
   }
 
   if (pathname === '/api/db/time') {
@@ -262,10 +289,15 @@ const server = http.createServer((req, res) => {
     (async () => {
       const result = {
         config: {
-          firebaseProject: admin.app().options.projectId,
-          hasServiceAccount: true,
+          firebaseProject: HAS_FIREBASE ? admin.app().options.projectId : null,
+          hasServiceAccount: HAS_FIREBASE,
         },
       };
+      if (!HAS_FIREBASE) {
+        result.ok = true;
+        result.note = 'Firebase not configured; server running in static mode';
+        return sendJson(res, 200, result);
+      }
       try {
         const usersSnapshot = await db.collection('users').limit(1).get();
         result.ok = true;
@@ -293,5 +325,5 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, () => {
   console.log(`MyMcKenzie dynamic server listening on http://localhost:${PORT}`);
-  console.log('Using Firebase as the database.');
+  console.log(HAS_FIREBASE ? 'Using Firebase as the database.' : 'Running in static-only mode (no Firebase).');
 });
