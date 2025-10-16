@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MyMcKenzie Settings - McKenzie Friend</title>
   <link rel="stylesheet" href="../assets/css/settings.css" />
+  <link rel="stylesheet" href="../assets/css/user-dashboard.css" />
+  <script type="module" src="../assets/js/navbar.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('go-to-dashboard-btn').addEventListener('click', () => {
+        window.location.href = '../friend/friend-Dashboard.html';
+      });
+    });
+  </script>
 </head>
 <body>
   <div class="settings-container">
@@ -13,14 +22,17 @@
     <aside class="sidebar">
       <h2>Settings</h2>
       <ul>
-  <li class="active"><a href="account-mckenzie.html">Account</a></li>
-        <li><a href="../billing/bill-mckenzie.html">Billing/Payment</a></li>
+        <li class="active"><a href="mckenzie-setting.html">Account Info</a></li>
+        <li><a href="../billing/bill-mckenzie.html">Renewal/Billing</a></li>
       </ul>
     </aside>
 
     <!-- Main Panel -->
     <main class="settings-main">
-      <h1>Account Settings</h1>
+      <div class="settings-header">
+        <h1>Account Settings</h1>
+        <button id="go-to-dashboard-btn" class="dashboard-btn">Go to Dashboard</button>
+      </div>
       <p class="desc">Manage your personal details, security, and payment preferences.</p>
 
       <!-- Account Info Section -->

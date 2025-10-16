@@ -11,7 +11,6 @@ const attachMckenzieSignup = () => {
     const lastName = document.getElementById('lastName').value.trim();
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
-    const expertise = document.getElementById('expertise').value.trim();
     if (!firstName || !lastName || !email || !password) { alert('Please fill in required fields'); return; }
 
     btn.disabled = true;
@@ -32,7 +31,6 @@ const attachMckenzieSignup = () => {
         lastName,
         role: 'mckenzie',
         accountType: 'mckenzie',
-        expertise: expertise || null,
         provider: 'password',
         createdAt: serverTimestamp()
       };

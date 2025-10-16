@@ -1,24 +1,90 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en-US">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Profile - MyMcKenzie</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="stylesheet" href="../assets/css/friend-Dashboard.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>McKenzie Friend Profile | MyMcKenzie</title>
+  <link rel="stylesheet" href="../assets/css/settings.css" />
+  <link rel="stylesheet" href="../assets/css/user-dashboard.css" />
+  <script type="module" src="../assets/js/navbar.js"></script>
+  <script type="module" src="../assets/js/profile.js" defer></script>
 </head>
 <body>
-  <header class="navbar">
-    <a href="../dashboard/user-dashboard.html" class="nav-logo"><h2 class="logo-text">MyMckenzie</h2></a>
-  </header>
+  <div class="settings-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>Profile</h2>
+      <ul>
+        <li class="active"><a href="profile.html">Profile Info</a></li>
+      </ul>
+    </aside>
 
-  <main class="container">
-    <div class="profile-card">
-      <img src="../assets/img/profile1.jpg" alt="Profile">
-      <h2>Jane Doe</h2>
-      <p><strong>Experience:</strong> 5 years assisting litigants in person</p>
-      <p><strong>Specialties:</strong> Family, Housing</p>
-    </div>
-  </main>
+    <!-- Main Profile Panel -->
+    <main class="settings-main">
+      <div class="settings-header">
+        <h1>Complete Your Profile</h1>
+        <button id="go-to-dashboard-btn" class="dashboard-btn">Go to Dashboard</button>
+      </div>
+      <p class="desc">Fill in your details to appear on the MyMcKenzie marketplace.</p>
+
+      <!-- Profile Info -->
+      <section class="settings-section">
+        <h2>Profile Information</h2>
+        <form id="profileForm" enctype="multipart/form-data" class="profile-form">
+          <!-- Personal Information -->
+          <div class="form-row">
+            <div class="form-group">
+              <p>Your first name from your account</p>
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" readonly />
+            </div>
+
+            <div class="form-group">
+              <p>Your last name from your account</p>
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" readonly />
+            </div>
+          </div>
+
+          <!-- Professional Information -->
+          <div class="form-group">
+            <p>Specify your area of legal expertise</p>
+            <label for="expertise">Area of Expertise</label>
+            <input type="text" id="expertise" placeholder="e.g., Family law, Employment, Civil cases" required />
+          </div>
+
+          <div class="form-group">
+            <p>Write a brief bio about yourself and your experience</p>
+            <label for="bio">About / Bio</label>
+            <textarea id="bio" rows="4" placeholder="Tell clients about yourself and your experience" required></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <p>Enter your location and jurisdiction</p>
+              <label for="location">Location / Jurisdiction</label>
+              <input type="text" id="location" placeholder="e.g., London, UK" required />
+            </div>
+
+            <div class="form-group">
+              <p>How many years have you been practicing?</p>
+              <label for="yearsPractice">Years of Practice</label>
+              <input type="number" id="yearsPractice" min="0" placeholder="0" required />
+            </div>
+          </div>
+
+          <!-- Profile Picture -->
+          <div class="form-group">
+            <p>Upload a professional profile picture</p>
+            <label for="profilePicture">Profile Picture</label>
+            <input type="file" id="profilePicture" accept="image/*" required />
+            <div id="imagePreview"></div>
+          </div>
+
+          <button type="submit" class="save-btn">Save Profile</button>
+        </form>
+      </section>
+    </main>
+  </div>
 </body>
 </html>
