@@ -1,3 +1,12 @@
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, collection, addDoc, updateDoc, arrayUnion } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { firebaseConfig } from '../js/firebaseConfig.js';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
 const uploadAttachment = async (file) => {
   try {
     const publicUrl = URL.createObjectURL(file);
@@ -7,7 +16,59 @@ const uploadAttachment = async (file) => {
   }
 };
 
-window.addEventListener("DOMContentLoaded", () => {
+  window.addEventListener("DOMContentLoaded", () => {
+    let currentUser = null;
+    let currentConversationId = null;
+
+    // Check for conversation ID in URL to resume conversation
+    const urlParams = new URLSearchParams(window.location.search);
+    const resumeConversationId = urlParams.get('conversationId');
+    if (resumeConversationId) {
+      currentConversationId = resumeConversationId;
+      // Load existing conversation
+      loadConversation(resumeConversationId);
+    }
+
+  // Check authentication state
+  onAuthStateChanged(auth, async (user) => {
+    currentUser = user;
+    if (user) {
+      // User is signed in, fetch profile
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const userData = userDoc.data();
+      const displayName = userData?.name || user.email; // Use name if available, else email
+      const role = userData?.role || 'user'; // default to 'user' if no role
+
+      // Determine dashboard URL based on role
+      let dashboardUrl = '../dashboard/user-dashboard.html'; // default
+      if (role === 'friend' || role === 'mckenzie') {
+        dashboardUrl = '../friend/friend-Dashboard.html';
+      }
+
+      // Update navbar to show clickable user name
+      const navMenu = document.querySelector('.nav-menu');
+      if (navMenu) {
+        navMenu.innerHTML = `
+          <li class="nav-item">
+            <a href="${dashboardUrl}" class="nav-link">${displayName}</a>
+          </li>
+        `;
+      }
+    } else {
+      // User is signed out, show login/signup links
+      const navMenu = document.querySelector('.nav-menu');
+      if (navMenu) {
+        navMenu.innerHTML = `
+          <li class="nav-item">
+            <a href="../auth/signin.html" class="nav-link">Login</a>
+          </li>
+          <li class="nav-item">
+            <a href="../join/Join.html" class="nav-link">Sign Up</a>
+          </li>
+        `;
+      }
+    }
+  });
 
   // --- DOM Elements ---
   const chatContainer = document.querySelector(".chat-container");
@@ -480,11 +541,90 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
     });
   }
 
+  // --- Load conversation from Firestore ---
+  const loadConversation = async (conversationId) => {
+    try {
+      const conversationDoc = await getDoc(doc(db, 'conversations', conversationId));
+      if (conversationDoc.exists()) {
+        const conversation = conversationDoc.data();
+        // Populate chat history
+        chatHistory.length = 0; // Clear existing
+        chatHistory.push(...conversation.messages);
+        // Render messages
+        conversation.messages.forEach(msg => {
+          if (msg.role === 'user') {
+            appendUserMessage(msg.parts[0].text);
+          } else if (msg.role === 'model') {
+            appendBotMessage(msg.parts[0].text);
+          }
+        });
+        activateChat();
+      } else {
+        console.error('Conversation not found');
+        // Show error message
+        appendBotMessage('Sorry, this conversation could not be found. It may have been deleted.');
+        activateChat();
+      }
+    } catch (error) {
+      console.error('Error loading conversation:', error);
+      appendBotMessage('Error loading conversation. Please try again.');
+      activateChat();
+    }
+  };
+
+  // --- Save conversation to Firestore ---
+  const saveConversation = async (title, messages) => {
+    if (!currentUser) return null;
+    try {
+      const conversationData = {
+        userId: currentUser.uid,
+        title: title,
+        messages: messages,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      const docRef = await addDoc(collection(db, 'conversations'), conversationData);
+      currentConversationId = docRef.id;
+      return docRef.id;
+    } catch (error) {
+      console.error('Error saving conversation:', error);
+      return null;
+    }
+  };
+
+  // --- Update existing conversation ---
+  const updateConversation = async (messages) => {
+    if (!currentUser || !currentConversationId) return;
+    try {
+      await updateDoc(doc(db, 'conversations', currentConversationId), {
+        messages: messages,
+        updatedAt: new Date()
+      });
+    } catch (error) {
+      console.error('Error updating conversation:', error);
+    }
+  };
+
+  // --- Generate conversation title from first message ---
+  const generateConversationTitle = (firstMessage) => {
+    const text = firstMessage?.text || '';
+    return text.length > 50 ? text.substring(0, 50) + '...' : text || 'New Conversation';
+  };
+
   // --- Generate AI response ---
   const generateResponse = async (userParts) => {
     const botDiv = appendBotMessage("💬 Thinking...", true);
     const parts = Array.isArray(userParts) ? userParts : [{ text: String(userParts || '') }];
     chatHistory.push({ role: "user", parts });
+
+    // If this is the first message, create a new conversation
+    if (chatHistory.length === 1 && currentUser) {
+      const title = generateConversationTitle(parts[0]);
+      await saveConversation(title, chatHistory);
+    } else if (currentConversationId) {
+      // Update existing conversation
+      await updateConversation(chatHistory);
+    }
 
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     let lastErr = null;
@@ -525,6 +665,11 @@ Never refer to yourself as "Google Gemini." Always use "MyMcKenzie AI."
 
           const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "⚠️ No response received.";
           chatHistory.push({ role: "model", parts: [{ text: reply }] });
+
+          // Update conversation with bot response
+          if (currentConversationId) {
+            await updateConversation(chatHistory);
+          }
 
           const target = botDiv ? botDiv.querySelector(".message-text") : null;
           typingEffect(reply, target);

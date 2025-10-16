@@ -10,8 +10,10 @@
 <body>
   <header>
     <nav class="navbar">
-      <a href="../index.html" class="nav-logo"><h2 class="logo-text">MyMckenzie</h2></a>
-      <ul class="nav-menu"><li class="nav-item"><a class="nav-link" href="../auth/signin.html">Sign in</a></li></ul>
+      <a href="#" class="nav-logo">
+        <span class="logo-text">MyMckenzie</span>
+      </a>
+      <ul id="nav-menu" class="nav-menu"></ul>
     </nav>
   </header>
 
@@ -20,23 +22,15 @@
       <h1 class="title">Conversations</h1>
       <p class="message">Your conversation history with MyMckenzie.</p>
 
-      <div class="chat-list"></div>
-      <div class="chat-input-row">
-        <input type="text" id="chatInput" placeholder="Type a message..." />
-        <button id="chatSend">Send</button>
+      <div class="chat-list">
+        <div id="loading">Loading conversations...</div>
+        <div id="no-conversations" style="display: none;">No conversations found. Start a chat to see your history here.</div>
       </div>
-
-      <div class="chat-attachments-row">
-        <label for="fileInput" class="sr-only">Choose a file to upload</label>
-        <input type="file" id="fileInput" aria-label="Choose a file to upload" />
-        <button id="fileUploadBtn">Upload file</button>
-        <div id="uploadProgress" class="upload-progress hidden">
-          <div class="progress-bar"></div>
-        </div>
-      </div>
+      <button id="backToConversations" style="display: none; margin-top: 10px;">Back to Conversations</button>
     </div>
 
     <link rel="stylesheet" href="../assets/css/pages.css">
+    <script type="module" src="../assets/js/navbar.js"></script>
     <script type="module" src="../assets/js/conversation.js" defer></script>
   </main>
 </body>

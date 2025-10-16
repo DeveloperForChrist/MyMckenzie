@@ -29,19 +29,11 @@
 <body>
 
 <header>
-    <nav class="navbar">
-        <a href="#" class="nav-logo"> 
-            <h2 class="logo-text">MyMcKenzie</h2>
+    <nav class="navbar logged-in">
+        <a href="#" class="nav-logo">
+            <span class="logo-text">MyMcKenzie</span>
         </a>
-        <ul class="nav-menu">
-            <li class="nav-item">
-                <a href="../auth/signin.html" class="nav-link">Login</a>
-            </li>
-
-            <li class="nav-item">
-                <a href="../join/Join.html" class="nav-link">Sign Up</a>
-            </li>
-        </ul>
+        <ul id="nav-menu" class="nav-menu"></ul>
     </nav>
 </header>
 
@@ -83,6 +75,7 @@
 
 </div>
 
-<script src="../assets/js/chatbot.js"></script>
+<script type="module" src="../assets/js/navbar.js"></script>
+<script type="module" src="../assets/js/chatbot.js"></script>
 </body>
 </html>

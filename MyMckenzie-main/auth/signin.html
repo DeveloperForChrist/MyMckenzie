@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MyMcKenzie Sign In</title>
   <link rel="stylesheet" href="../assets/css/signin.css" />
-  <script type="module" src="../assets/js/signin.js" defer></script>
+  <script type="module" src="../assets/js/signin.js"></script>
 </head>
 <body>
   <div class="form">
@@ -23,7 +23,12 @@
       <input type="password" id="password" placeholder="Enter your password" required />
     </label>
 
-    <button class="submit" id="signinBtn">Sign In</button>
+    <button class="submit" id="signinBtn" type="button">Sign In</button>
+
+    <button class="submit google-btn" id="googleSigninBtn" type="button">
+      <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo" style="width: 20px; height: 20px; margin-right: 10px;">
+      Sign In with Google
+    </button>
 
     <p class="signin">
       Don’t have an account? <a href="../join/Join.html">Sign Up</a>

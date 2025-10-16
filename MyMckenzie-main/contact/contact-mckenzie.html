@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact McKenzie Friend</title>
+  <link rel="stylesheet" href="../assets/css/Contact.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Contact McKenzie Friend</h1>
+    <p>Reach out to this McKenzie Friend for assistance with your case.</p>
+
+    <div class="contact-box">
+      <div class="contact-left">
+        <h3>Send Your Request</h3>
+        <form id="contact-mckenzie-form">
+          <div class="input-row">
+            <div class="input-group">
+              <label>Name</label>
+              <input type="text" id="name" placeholder="Your Name" required />
+            </div>
+            <div class="input-group">
+              <label>Email</label>
+              <input type="email" id="email" placeholder="Your Email" required />
+            </div>
+          </div>
+
+          <label>Case Details</label>
+          <textarea id="case-details" rows="5" placeholder="Describe your case details..." required></textarea>
+
+          <button type="submit" class="btn">SEND</button>
+        </form>
+      </div>
+
+      <div class="contact-right">
+        <h3>McKenzie Friend Details</h3>
+        <div id="friend-details">
+          <p>Loading friend information...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../assets/js/contact-mckenzie.js"></script>
+</body>
+</html>

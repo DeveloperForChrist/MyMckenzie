@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MyMcKenzie Sign Up</title>
   <link rel="stylesheet" href="../assets/css/user-signup.css" />
-  <script type="module" src="../assets/js/user-signup.js" defer></script>
+  <script src="../assets/js/user-signup.js" defer></script>
 </head>
 <body>
   <div class="form">
@@ -32,7 +32,7 @@
       <input type="password" id="password" placeholder="Enter your password" required />
     </label>
 
-    <button class="submit" id="signupBtn">Sign Up</button>
+    <button class="submit" id="signupBtn" type="button">Sign Up</button>
 
     <div id="signupStatus">
       <div class="spinner" id="signupSpinner" aria-hidden="true"></div>
@@ -43,5 +43,6 @@
       Already have an account? <a href="signin.html">Sign In</a>
     </p>
   </div>
+  <script src="../assets/js/backend-status.js"></script>
 </body>
 </html>

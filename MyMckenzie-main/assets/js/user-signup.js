@@ -1,8 +1,82 @@
-// Firebase client-side signup: create Auth user and write profile to Firestore
+// Postgres-backed signup via backend endpoint
 
-import { auth, db } from './firebase-init.js';
-import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
-import { doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
+async function fetchJson(url, options = {}, timeoutMs = 10000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      ...options,
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+      signal: controller.signal,
+    });
+    const text = await res.text();
+    let json;
+    try { json = text ? JSON.parse(text) : {}; } catch { json = { raw: text }; }
+    if (!res.ok) {
+      const err = new Error(`HTTP ${res.status}`);
+      err.status = res.status;
+      err.response = json;
+      throw err;
+    }
+    return json;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function handleSignup(e) {
+  if (e && typeof e.preventDefault === 'function') e.preventDefault();
+
+  const signupBtn = document.getElementById('signupBtn');
+  const firstNameEl = document.getElementById('firstName');
+  const lastNameEl = document.getElementById('lastName');
+  const emailEl = document.getElementById('email');
+  const passwordEl = document.getElementById('password');
+
+  const firstName = firstNameEl ? firstNameEl.value.trim() : '';
+  const lastName = lastNameEl ? lastNameEl.value.trim() : '';
+  const email = emailEl ? emailEl.value.trim() : '';
+  const password = passwordEl ? passwordEl.value : '';
+
+  if (!firstName || !lastName || !email || !password) {
+    alert('Please fill in all fields.');
+    return;
+  }
+
+  // UI feedback
+  const signupSpinner = document.getElementById('signupSpinner');
+  const statusMsg = document.getElementById('statusMsg');
+  const previousText = signupBtn ? signupBtn.textContent : '';
+  if (signupBtn) {
+    signupBtn.disabled = true;
+    signupBtn.textContent = 'Signing up...';
+  }
+  if (signupSpinner) signupSpinner.style.display = 'block';
+  if (statusMsg) statusMsg.textContent = 'Creating your account...';
+
+  try {
+    const resp = await fetchJson('/api/auth/signup', {
+      method: 'POST',
+      body: JSON.stringify({ firstName, lastName, email, password })
+    });
+    if (statusMsg) statusMsg.textContent = 'Signup successful. You can now sign in.';
+    setTimeout(() => { window.location.href = '../auth/signin.html'; }, 800);
+  } catch (error) {
+    console.error('Signup error', error);
+    let message = error?.response?.error || error?.message || 'Signup failed';
+    const detail = error?.response?.detail;
+    if (detail) message += ' - ' + detail;
+    const statusMsg = document.getElementById('statusMsg');
+    if (statusMsg) statusMsg.textContent = message;
+    alert('Error: ' + message);
+  } finally {
+    if (signupBtn) {
+      signupBtn.disabled = false;
+      signupBtn.textContent = previousText;
+    }
+    if (signupSpinner) signupSpinner.style.display = 'none';
+  }
+}
 
 const attachUserSignup = () => {
   const signupBtn = document.getElementById('signupBtn');
@@ -11,69 +85,11 @@ const attachUserSignup = () => {
     return;
   }
 
-  signupBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
-
-    const firstNameEl = document.getElementById('firstName');
-    const lastNameEl = document.getElementById('lastName');
-    const emailEl = document.getElementById('email');
-    const passwordEl = document.getElementById('password');
-
-    const firstName = firstNameEl ? firstNameEl.value.trim() : '';
-    const lastName = lastNameEl ? lastNameEl.value.trim() : '';
-    const email = emailEl ? emailEl.value.trim() : '';
-    const password = passwordEl ? passwordEl.value.trim() : '';
-
-    if (!firstName || !lastName || !email || !password) {
-      alert('Please fill in all fields.');
-      return;
-    }
-
-    // UI feedback
-    const signupSpinner = document.getElementById('signupSpinner');
-    const statusMsg = document.getElementById('statusMsg');
-    const previousText = signupBtn.textContent;
-    signupBtn.disabled = true;
-    signupBtn.textContent = 'Signing up...';
-    if (signupSpinner) signupSpinner.style.display = 'block';
-    if (statusMsg) statusMsg.textContent = 'Creating your account...';
-
-    try {
-      // Create Firebase Auth user
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      const { user } = cred;
-
-      // Optional: set displayName
-      try { await updateProfile(user, { displayName: `${firstName} ${lastName}`.trim() }); } catch (_) {}
-
-      // Write profile to Firestore (users/{uid})
-      const uid = user.uid;
-      await setDoc(doc(db, 'users', uid), {
-        uid,
-        email,
-        firstName,
-        lastName,
-        role: 'user',
-        accountType: 'user',
-        provider: 'password',
-        createdAt: serverTimestamp()
-      }, { merge: true });
-
-      // Send email verification (optional but recommended)
-      try { await sendEmailVerification(user); } catch (_) {}
-
-      if (statusMsg) statusMsg.textContent = 'Signup successful. Please verify your email to complete setup.';
-      // Redirect to sign-in after a short delay
-      setTimeout(() => { window.location.href = '../auth/signin.html'; }, 1000);
-    } catch (error) {
-      console.error('Signup error', error);
-      if (statusMsg) statusMsg.textContent = 'Signup failed: ' + (error?.message || error);
-      alert('Error: ' + (error?.message || error));
-    } finally {
-      signupBtn.disabled = false;
-      signupBtn.textContent = previousText;
-      if (signupSpinner) signupSpinner.style.display = 'none';
-    }
+  signupBtn.addEventListener('click', handleSignup);
+  // Fallback: event delegation in case direct listener fails to bind
+  document.addEventListener('click', (evt) => {
+    const btn = evt.target && evt.target.closest ? evt.target.closest('#signupBtn') : null;
+    if (btn) handleSignup(evt);
   });
 };
 

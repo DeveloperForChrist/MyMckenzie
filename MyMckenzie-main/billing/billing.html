@@ -27,27 +27,38 @@
       <section class="settings-section">
         <h2>Current Plan</h2>
         <div class="plan-card">
-          <p><strong>Plan:</strong> Premium (£25/month)</p>
-          <p><strong>Next Renewal:</strong> 15 November 2025</p>
+          <p><strong>Plan:</strong> Free Plan</p>
           <p><strong>Status:</strong> Active</p>
-          <button class="save-btn">Manage Subscription</button>
+          <button class="save-btn">Upgrade Plan</button>
         </div>
       </section>
 
       <!-- Payment Info -->
       <section class="settings-section">
         <h2>Payment Method</h2>
-        <div class="form-group full-width">
-          <label>Card on File</label>
-          <input type="text" placeholder="**** **** **** 4829" readonly />
-        </div>
+        <form>
+          <div class="form-group">
+            <label>Card Number</label>
+            <input type="text" id="card-number" placeholder="1234 5678 9012 3456" />
+          </div>
 
-        <div class="form-group full-width">
-          <label>Billing Email</label>
-          <input type="email" placeholder="user@email.com" readonly />
-        </div>
+          <div class="form-group">
+            <label>Expiration Date</label>
+            <input type="text" id="expiration-date" placeholder="MM/YY" />
+          </div>
 
-        <button class="save-btn">Update Payment Method</button>
+          <div class="form-group">
+            <label>CVV</label>
+            <input type="text" id="cvv" placeholder="123" />
+          </div>
+
+          <div class="form-group full-width">
+            <label>Billing Email</label>
+            <input type="email" id="billing-email" placeholder="user@email.com" />
+          </div>
+        </form>
+
+        <button class="save-btn">Save Payment Method</button>
       </section>
 
       <!-- Billing History -->
@@ -80,5 +91,6 @@
       </section>
     </main>
   </div>
+  <script type="module" src="../assets/js/navbar.js"></script>
 </body>
 </html>

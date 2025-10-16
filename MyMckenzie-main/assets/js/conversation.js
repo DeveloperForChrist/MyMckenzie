@@ -1,6 +1,11 @@
-import { auth, db } from './firebase-init.js';
-import { doc, getDoc, updateDoc, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
-import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion, collection, query, where, orderBy, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+import { firebaseConfig } from './firebaseConfig.js';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 const chatListEl = document.querySelector('.chat-list');
 const inputEl = document.querySelector('#chatInput');
@@ -23,29 +28,82 @@ async function appendMessage(uid, message) {
   await updateDoc(userDoc, { chatHistory: arrayUnion(message) });
 }
 
+// Function to render conversation cards
+async function renderConversationCards(user) {
+  const loadingEl = document.getElementById('loading');
+  const noConversationsEl = document.getElementById('no-conversations');
+
+  if (loadingEl) loadingEl.style.display = 'block';
+  if (noConversationsEl) noConversationsEl.style.display = 'none';
+
+  try {
+    const conversationsRef = collection(db, 'conversations');
+    const querySnapshot = await getDocs(conversationsRef);
+
+    // Filter by userId and sort by updatedAt client-side
+    const userConversations = querySnapshot.docs
+      .filter(doc => doc.data().userId === user.uid)
+      .sort((a, b) => b.data().updatedAt.toDate() - a.data().updatedAt.toDate());
+
+    if (loadingEl) loadingEl.style.display = 'none';
+
+    if (userConversations.length === 0) {
+      if (noConversationsEl) noConversationsEl.style.display = 'block';
+      return;
+    }
+
+    const conversationContainer = document.createElement('div');
+    conversationContainer.className = 'conversation-cards';
+
+    userConversations.forEach((doc) => {
+      const conversation = doc.data();
+      const card = document.createElement('div');
+      card.className = 'conversation-card';
+      card.innerHTML = `
+        <h3>${conversation.title || 'Untitled Conversation'}</h3>
+        <p>Last updated: ${conversation.updatedAt.toDate().toLocaleString()}</p>
+        <button class="view-conversation-btn" data-id="${doc.id}">View Conversation</button>
+      `;
+      conversationContainer.appendChild(card);
+    });
+
+    // Replace the chat list with conversation cards
+    if (chatListEl) {
+      chatListEl.innerHTML = '';
+      chatListEl.appendChild(conversationContainer);
+
+      // Add event listeners to view buttons
+      document.querySelectorAll('.view-conversation-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const conversationId = e.target.dataset.id;
+          viewConversation(conversationId);
+        });
+      });
+    }
+  } catch (error) {
+    console.error('Error loading conversations:', error);
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (noConversationsEl) noConversationsEl.style.display = 'block';
+    noConversationsEl.textContent = 'Error loading conversations. Please try again.';
+  }
+}
+
+// Function to view a specific conversation
+async function viewConversation(conversationId) {
+  // Redirect to chatbot page with conversation ID to resume
+  window.location.href = `../chatbot/chatbot.html?conversationId=${conversationId}`;
+}
+
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = '../auth/signin.html';
     return;
   }
-  const userDoc = await getDoc(doc(db, 'users', user.uid));
-  const data = userDoc.exists() ? userDoc.data() : null;
-  const messages = data && data.chatHistory ? data.chatHistory : [];
-  renderMessages(messages);
 
-  if (sendBtn) sendBtn.addEventListener('click', async () => {
-    const text = (inputEl && inputEl.value) ? inputEl.value.trim() : '';
-    if (!text) return;
-    const message = { sender: 'user', text, timestamp: new Date().toISOString() };
-    await appendMessage(user.uid, message);
-    renderMessages([...messages, message]);
-    if (inputEl) inputEl.value = '';
+  // Render conversation cards instead of old chat history
+  await renderConversationCards(user);
 
-    // Placeholder bot response — echo with delay (replace with real AI/chatbot integration)
-    setTimeout(async () => {
-      const botMsg = { sender: 'bot', text: 'MyMckenzie: We received your message — here is a sample reply.', timestamp: new Date().toISOString() };
-      await appendMessage(user.uid, botMsg);
-      renderMessages([...messages, message, botMsg]);
-    }, 800);
-  });
+  // Hide input elements since we're showing conversation cards
+  if (inputEl) inputEl.style.display = 'none';
+  if (sendBtn) sendBtn.style.display = 'none';
 });
