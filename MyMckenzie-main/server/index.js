@@ -148,10 +148,60 @@ const server = http.createServer((req, res) => {
 
         // Store additional user metadata in Firestore
         await db.collection('users').doc(userRecord.uid).set({
+          uid: userRecord.uid,
           firstName,
           lastName,
           displayName,
+          email,
           role: 'user',
+          accountType: 'user',
+          provider: 'password',
+          createdAt: new Date(),
+        });
+
+        return sendJson(res, 201, { ok: true, id: userRecord.uid, createdAt: userRecord.metadata.creationTime });
+      } catch (err) {
+        if (String(err).includes('Invalid JSON')) return sendJson(res, 400, { error: 'Invalid JSON' });
+        if (String(err).includes('Payload too large')) return sendJson(res, 413, { error: 'Payload too large' });
+        if (err.code === 'auth/email-already-exists') return sendJson(res, 409, { error: 'Email already registered' });
+        return sendJson(res, 500, { error: 'Server error', detail: String(err) });
+      }
+    })();
+    return;
+  }
+
+  // McKenzie Signup (server-admin creates a Firebase Auth user for McKenzie Friend)
+  if (pathname === '/api/auth/mckenzie-signup' && method === 'POST') {
+    (async () => {
+      try {
+        const data = await readJsonBody(req);
+        const firstName = (data.firstName || '').toString().trim();
+        const lastName = (data.lastName || '').toString().trim();
+        const email = (data.email || '').toString().trim();
+        const password = (data.password || '').toString();
+        if (!firstName || !lastName || !email || !password) return sendJson(res, 400, { error: 'Missing required fields' });
+        if (!isValidEmail(email)) return sendJson(res, 400, { error: 'Invalid email' });
+        if (password.length < 8) return sendJson(res, 400, { error: 'Password must be at least 8 characters' });
+
+        const displayName = `${firstName} ${lastName}`.trim();
+
+        const userRecord = await auth.createUser({
+          email,
+          password,
+          displayName,
+          emailVerified: true, // instantly confirm since this is an admin-created user
+        });
+
+        // Store additional user metadata in Firestore for McKenzie Friend
+        await db.collection('users').doc(userRecord.uid).set({
+          uid: userRecord.uid,
+          firstName,
+          lastName,
+          displayName,
+          email,
+          role: 'mckenzie',
+          accountType: 'mckenzie',
+          provider: 'password',
           createdAt: new Date(),
         });
 

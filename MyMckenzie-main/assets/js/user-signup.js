@@ -57,7 +57,7 @@ async function handleSignup(e) {
   try {
     const resp = await fetchJson('/api/auth/signup', {
       method: 'POST',
-      body: JSON.stringify({ firstName, lastName, email, password })
+      body: JSON.stringify({ firstName, lastName, email, password, role: 'user' })
     });
     if (statusMsg) statusMsg.textContent = 'Signup successful. You can now sign in.';
     setTimeout(() => { window.location.href = '../auth/signin.html'; }, 800);
