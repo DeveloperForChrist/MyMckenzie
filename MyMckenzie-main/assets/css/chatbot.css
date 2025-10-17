@@ -623,8 +623,8 @@ header .navbar.scrolled {
 
 /* Delete bin button */
 #delete-chats-button {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--border-radius-circle);
   border: none;
   cursor: pointer;
