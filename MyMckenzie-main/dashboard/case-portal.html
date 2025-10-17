@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet">
+
+  <!-- Font Awesome (for notification bell, etc.) -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="../assets/css/friend-Dashboard.css" />
+  <title>Case Portal - MyMcKenzie</title>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <a href="#" class="nav-logo">
+        <span class="logo-text">MyMckenzie</span>
+      </a>
+      <ul id="nav-menu" class="nav-menu"></ul>
+    </nav>
+  </header>
+  <main>
+    <div class="dashboard-header">
+      <h1>Case Portal</h1>
+      <p>Review and accept pending client cases that need your legal assistance</p>
+    </div>
+
+    <div class="dashboard-content">
+      <!-- Case Statistics -->
+      <div class="case-stats">
+        <div class="stat-card">
+          <div class="stat-number" id="pending-count">0</div>
+          <div class="stat-label">Pending Cases</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="accepted-count">0</div>
+          <div class="stat-label">Accepted This Week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="completed-count">0</div>
+          <div class="stat-label">Completed Cases</div>
+        </div>
+      </div>
+
+      <!-- Filter and Search -->
+      <div class="case-filters">
+        <div class="filter-group">
+          <label for="case-type-filter">Filter by Type:</label>
+          <select id="case-type-filter">
+            <option value="all">All Cases</option>
+            <option value="Employment">Employment</option>
+            <option value="Family">Family</option>
+            <option value="Property">Property</option>
+            <option value="Debt">Debt</option>
+            <option value="Consumer">Consumer</option>
+            <option value="Housing">Housing</option>
+            <option value="Immigration">Immigration</option>
+            <option value="Benefits">Benefits</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="urgency-filter">Urgency:</label>
+          <select id="urgency-filter">
+            <option value="all">All</option>
+            <option value="very-urgent">Very Urgent</option>
+            <option value="urgent">Urgent</option>
+            <option value="normal">Normal</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Cases List -->
+      <div class="case-list">
+        <div class="case-list-header">
+          <h2>Available Cases</h2>
+          <div class="case-count" id="case-count">0 cases found</div>
+        </div>
+        <div id="pending-cases" class="case-cards">
+          <!-- Cases will be loaded dynamically -->
+          <div class="no-cases">
+            <i class='bx bx-folder-open'></i>
+            <h3>No Cases Available</h3>
+            <p>New cases will appear here when clients submit them through the portal.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="secondary-btn" onclick="window.location.href='../friend/friend-Dashboard.html'">
+        <i class='bx bx-arrow-back'></i>
+        Back to Dashboard
+      </button>
+      <button class="talk-btn">
+        <i class='bx bx-message-dots'></i>
+        Talk with MyMcKenzie
+      </button>
+    </div>
+  </main>
+
+  <script type="module" src="../assets/js/navbar.js"></script>
+  <script src="../assets/js/case-portal.js" defer></script>
+</body>
+</html>

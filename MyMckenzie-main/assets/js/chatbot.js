@@ -164,6 +164,9 @@ const uploadAttachment = async (file) => {
   // --- Chat history ---
   const chatHistory = [];
 
+  // --- Message counter for referral ---
+  let messageCount = 0;
+
   // --- Gemini API config ---
   const API_KEY = "AIzaSyArGnZbyf9Ot3N4mo85VT8K0shIrGDyJB8";
   const GEM_MODELS = [
@@ -664,6 +667,9 @@ OPTIONAL ADVANCED FEATURES:
     const parts = Array.isArray(userParts) ? userParts : [{ text: String(userParts || '') }];
     chatHistory.push({ role: "user", parts });
 
+    // Increment message count for referral logic
+    messageCount++;
+
     // If this is the first message, create a new conversation
     if (chatHistory.length === 1 && currentUser) {
       const title = generateConversationTitle(parts[0]);
@@ -716,6 +722,38 @@ OPTIONAL ADVANCED FEATURES:
           // Update conversation with bot response
           if (currentConversationId) {
             await updateConversation(chatHistory);
+          }
+
+          // Check if we need to refer to connect portal after 2 messages
+          if (messageCount >= 2) {
+            // Generate conversation summary using Gemini
+            const summaryPrompt = `Please provide a concise summary of the following conversation between a user and MyMcKenzie AI. Focus on the key legal issues, questions asked, and any advice or guidance provided. Keep it under 500 words and make it suitable for a McKenzie Friend to review when considering taking on the case.
+
+Conversation:
+${chatHistory.map(msg => `${msg.role === 'user' ? 'User' : 'AI'}: ${msg.parts[0].text}`).join('\n\n')}`;
+
+            try {
+              const summaryResponse = await fetch(makeApiUrl(GEM_MODELS[0]), {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  contents: [{ role: "user", parts: [{ text: summaryPrompt }] }]
+                })
+              });
+
+              const summaryData = await summaryResponse.json();
+              const conversationSummary = summaryData.candidates?.[0]?.content?.parts?.[0]?.text || "Conversation summary unavailable.";
+
+              // Add referral message to reply
+              const referralMessage = `\n\n---\n\nIt looks like we've had a good discussion about your legal situation. To connect with a qualified McKenzie Friend who can help you further, please fill out our connection form with your details. They'll review your case summary and get back to you.\n\n[Connect with McKenzie Friend](${window.location.origin}/dashboard/connect-portal.html?summary=${encodeURIComponent(conversationSummary)})`;
+
+              reply += referralMessage;
+            } catch (error) {
+              console.error('Error generating summary:', error);
+              // Fallback referral without summary
+              const fallbackReferral = `\n\n---\n\nIt looks like we've had a good discussion about your legal situation. To connect with a qualified McKenzie Friend who can help you further, please fill out our connection form with your details.\n\n[Connect with McKenzie Friend](${window.location.origin}/dashboard/connect-portal.html)`;
+              reply += fallbackReferral;
+            }
           }
 
           const target = botDiv ? botDiv.querySelector(".message-text") : null;

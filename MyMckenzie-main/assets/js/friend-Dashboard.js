@@ -13,8 +13,7 @@ const portalLink = document.getElementById('portal-link');
 if (portalLink) {
   portalLink.addEventListener('click', (e) => {
     e.preventDefault();
-    // For now, redirect to marketplace where they can see pending cases
-    // In future, this could open a dedicated portal page
-    window.location.href = '../marketplace/marketplace.html?tab=portal';
+    // Redirect to the case portal page
+    window.location.href = '../dashboard/case-portal.html';
   });
 }

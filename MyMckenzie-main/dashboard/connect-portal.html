@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="../assets/css/friend-Dashboard.css" />
+  <title>Send My Case to Portal</title>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar">
+      <a href="#" class="nav-logo">
+        <span class="logo-text">MyMckenzie</span>
+      </a>
+      <ul id="nav-menu" class="nav-menu"></ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="dashboard-header">
+      <h1>Send My Case to Portal</h1>
+      <p>Submit your case details to connect with qualified McKenzie Friends who can assist you.</p>
+    </div>
+
+    <div class="profile-form-container">
+      <form id="connect-form">
+        <!-- Case Information -->
+        <div class="form-section">
+          <h3>Case Information</h3>
+
+          <div class="form-group">
+            <label for="case-title">Case Title / Short Description *</label>
+            <input type="text" id="case-title" name="caseTitle" placeholder="e.g., Dispute with landlord over deposit" required>
+          </div>
+
+          <div class="form-group">
+            <label for="case-type">Case Type / Category *</label>
+            <select id="case-type" name="caseType" required>
+              <option value="">Select case type</option>
+              <option value="employment">Employment</option>
+              <option value="family">Family</option>
+              <option value="property">Property</option>
+              <option value="debt">Debt</option>
+              <option value="consumer">Consumer</option>
+              <option value="housing">Housing</option>
+              <option value="immigration">Immigration</option>
+              <option value="benefits">Benefits</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="case-details">Case Details / Description *</label>
+            <textarea id="case-details" name="caseDetails" rows="4" placeholder="Describe your case..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="urgency">Urgency Level</label>
+            <select id="urgency" name="urgency">
+              <option value="normal">Normal</option>
+              <option value="urgent">Urgent</option>
+              <option value="very-urgent">Very Urgent</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="deadline">Deadline (if applicable)</label>
+            <input type="date" id="deadline" name="deadline">
+          </div>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="form-section">
+          <h3>Personal Information</h3>
+
+          <div class="form-group">
+            <label for="user-name">Full Name *</label>
+            <input type="text" id="user-name" name="userName" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone">
+          </div>
+
+          <div class="form-group">
+            <label for="contact-method">Preferred Contact Method</label>
+            <select id="contact-method" name="contactMethod">
+              <option value="email">Email</option>
+              <option value="phone">Phone</option>
+              <option value="portal">Portal Messages</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Supporting Documents -->
+        <div class="form-section">
+          <h3>Supporting Documents</h3>
+          <div class="form-group">
+            <label for="documents">Upload Files (optional)</label>
+            <input type="file" id="documents" name="documents" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt">
+            <small class="form-help">Accepted formats: PDF, DOC, DOCX, JPG, PNG, TXT. Maximum 10MB total.</small>
+          </div>
+        </div>
+
+        <!-- Privacy & Consent -->
+        <div class="form-section">
+          <h3>Privacy & Consent</h3>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="consent" name="consent" required>
+              I consent to my case information and personal details being shared with qualified McKenzie Friends through the portal for the purpose of providing legal assistance. I understand that this information will be handled confidentially.
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="notifications" name="notifications">
+              I would like to receive email notifications about my case updates.
+            </label>
+          </div>
+
+          <div class="form-group">
+            <p class="terms-text">
+              By submitting this form, you agree to our <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Submission -->
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Send My Case</button>
+          <button type="button" id="save-draft" class="draft-btn">Save Draft</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="../assets/js/navbar.js"></script>
+  <script src="../assets/js/connect-portal.js" defer></script>
+</body>
+</html>
