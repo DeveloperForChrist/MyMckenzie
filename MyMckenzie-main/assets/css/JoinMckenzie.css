@@ -1,8 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "DM Sans", sans-serif;
+}
+
+:root {
+  --primary-color: rebeccapurple;
+  --primary-color-light: #a78bfa;
+  --white-color: #ffffff;
+  --dark-bg: #2e1a47;
+  --black-color: #000000;
+  --input-bg: #222;
+  --border-radius-m: 20px;
+  --font-size-l: 1rem;
+  --font-size-xl: 1.2rem;
+}
+
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
-  background-color: #0c0320;
-  color: #fff;
+  background-color: var(--dark-bg);
+  color: var(--white-color);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -18,7 +38,7 @@ h1 {
 }
 
 p {
-  color: #aaa;
+  color: var(--primary-color-light);
   font-size: 1.1rem;
   margin-bottom: 2rem;
 }
@@ -31,7 +51,7 @@ p {
 }
 
 .card {
-  background-color: #1b1035;
+  background-color: var(--black-color);
   border-radius: 20px;
   padding: 2rem;
   width: 260px;
@@ -48,7 +68,7 @@ p {
 .card:hover {
   transform: translateY(-6px);
   box-shadow: 0 0 25px rgba(255,255,255,0.1);
-  background-color: #2a1750;
+  background-color: var(--primary-color);
 }
 
 .card-icon {
@@ -63,7 +83,7 @@ p {
 
 .card p {
   font-size: 0.95rem;
-  color: #bbb;
+  color: var(--primary-color-light);
 }
 
 @media (max-width: 600px) {

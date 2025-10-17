@@ -15,6 +15,11 @@ li { list-style: none; }
   --primary-color-light: #a78bfa;
   --white-color: #ffffff;
   --dark-bg: #2e1a47;
+  --black-color: #000000;
+  --input-bg: #222;
+  --border-radius-m: 20px;
+  --font-size-l: 1rem;
+  --font-size-xl: 1.2rem;
 }
 
 /* ================= NAVBAR ================= */

@@ -14,11 +14,39 @@
 }
 
 :root {
-  --primary-bg: #111;
-  --form-bg: #000;
-  --text-color: #fff;
-  --accent-color: #999;
-  --border-radius: 20px;
+  --primary-color: rebeccapurple;
+  --primary-color-light: #a78bfa;
+  --white-color: #ffffff;
+  --dark-bg: #2e1a47;
+  --black-color: #000000;
+
+  /* font sizes */
+  --font-size-s: 0.9rem; /* 14px */
+  --font-size-n: 1rem;   /* 16px */
+  --font-size-m: 1.12rem; /* 18px */
+  --font-size-l: 1.5rem; /* 20px */
+  --font-size-xl: 2rem; /* 32px */
+  --font-size-2xl: 2.3rem; /* 48px */
+  --font-size-3xl: 3rem; /* 64px */
+  --font-size-4xl: 3.75rem; /* 80px */
+  --font-size-5xl: 4.5rem; /* 96px */
+  --font-size-6xl: 6rem; /* 128px */
+  --font-size-7xl: 8rem; /* 144px */
+  --font-size-8xl: 9rem; /* 192px */
+
+    /* font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --font-weight-extra-bold: 700;
+
+  /* border radius */
+  --border-radius-s: 8px; /* 2px */
+  --border-radius-m: 30px;
+  --border-radius-circle: 50%; /* 4px */
+
+  /* site max width */
+  --site-max-width: 1300px;
 }
 
 /* ===========================
@@ -28,10 +56,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--primary-bg);
+  background: var(--dark-bg);
   min-height: 100vh;
   padding: 20px;
-  color: var(--text-color);
+  color: var(--white-color);
 }
 
 /* ===========================
@@ -44,9 +72,9 @@ body {
   width: 100%;
   max-width: 700px;
   min-height: 70vh;
-  background: var(--form-bg);
+  background: var(--primary-color);
   padding: 40px 50px;
-  border-radius: var(--border-radius);
+  border-radius: var(--border-radius-m);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   position: relative;
 }
@@ -58,7 +86,7 @@ body {
   font-size: 32px;
   font-weight: 700;
   text-align: center;
-  color: var(--text-color);
+  color: var(--white-color);
 }
 
 .message,
@@ -69,14 +97,14 @@ body {
 }
 
 .signin a {
-  color: var(--text-color);
+  color: var(--white-color);
   text-decoration: none;
   font-weight: 600;
   transition: 0.3s ease;
 }
 
 .signin a:hover {
-  color: var(--accent-color);
+  color: var(--primary-color-light);
 }
 
 /* ===========================
@@ -96,10 +124,10 @@ body {
 .form label input {
   width: 100%;
   padding: 14px 16px;
-  background: #1a1a1a;
+  background: var(--black-color);
   border: none;
   border-radius: 12px;
-  color: var(--text-color);
+  color: var(--white-color);
   font-size: 1rem;
   outline: none;
   transition: 0.3s ease;
@@ -124,7 +152,7 @@ body {
   top: -10px;
   font-size: 0.75em;
   font-weight: 600;
-  color: var(--accent-color);
+  color: var(--primary-color-light);
 }
 
 /* ===========================
@@ -135,7 +163,7 @@ body {
   top: 50%;
   right: 12px;
   transform: translateY(-50%);
-  color: var(--text-color);
+  color: var(--white-color);
   cursor: pointer;
   width: 22px;
   height: 22px;
@@ -151,10 +179,10 @@ body {
 .submit {
   border: none;
   outline: none;
-  background: var(--text-color);
+  background: var(--white-color);
   padding: 14px;
   border-radius: 12px;
-  color: var(--form-bg);
+  color: var(--primary-color);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -162,9 +190,9 @@ body {
 }
 
 .submit:hover {
-  background: var(--form-bg);
-  color: var(--text-color);
-  border: 1px solid var(--text-color);
+  background: var(--primary-color);
+  color: var(--white-color);
+  border: 1px solid var(--white-color);
 }
 
 /* ===========================
@@ -175,7 +203,7 @@ body {
   width: 32px;
   height: 32px;
   border: 4px solid rgba(255,255,255,0.2);
-  border-top-color: var(--text-color);
+  border-top-color: var(--white-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 12px auto 0 auto;

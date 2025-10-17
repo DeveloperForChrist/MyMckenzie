@@ -15,11 +15,16 @@ li { list-style: none; }
   --primary-color-light: #a78bfa;
   --white-color: #ffffff;
   --dark-bg: #2e1a47;
+  --black-color: #000000;
+  --input-bg: #222;
+  --border-radius-m: 20px;
+  --font-size-l: 1rem;
+  --font-size-xl: 1.2rem;
 }
 
 /* ================= BODY ================= */
 body {
-  background: var(--primary-color);
+  background: var(--dark-bg);
   color: var(--white-color);
   overflow: hidden; /* prevent scrolling */
 }
@@ -46,8 +51,8 @@ main {
 }
 
 /* ================= CARD STYLE ================= */
-.card {   
-  background: #3b1d5a;
+.card {
+  background: var(--black-color);
   border-radius: 12px;
   padding: 20px;
   text-align: center;
@@ -60,7 +65,7 @@ main {
 }
 
 .card:hover {
-  background: var(--primary-color-light);
+  background: var(--primary-color);
   transform: translateY(-5px);
 }
 

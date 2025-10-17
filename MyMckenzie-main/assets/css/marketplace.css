@@ -1,4 +1,4 @@
-first name email or cir/* Import Google Font */
+/* Import Google Font */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
 
 /* Global Styles */
@@ -10,16 +10,54 @@ first name email or cir/* Import Google Font */
   font-family: 'DM Sans', sans-serif;
 }
 
+:root {
+  --primary-color: rebeccapurple;
+  --primary-color-light: #a78bfa;
+  --white-color: #ffffff;
+  --dark-bg: #2e1a47;
+  --black-color: #000000;
+
+  /* font sizes */
+  --font-size-s: 0.9rem;
+  --font-size-n: 1rem;
+  --font-size-m: 1.12rem;
+  --font-size-l: 1.5rem;
+  --font-size-xl: 2rem;
+  --font-size-2xl: 2.3rem;
+  --font-size-3xl: 3rem;
+  --font-size-4xl: 3.75rem;
+  --font-size-5xl: 4.5rem;
+  --font-size-6xl: 6rem;
+  --font-size-7xl: 8rem;
+  --font-size-8xl: 9rem;
+
+  /* font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --font-weight-extra-bold: 700;
+
+  /* border radius */
+  --border-radius-s: 8px;
+  --border-radius-m: 30px;
+  --border-radius-circle: 50%;
+
+  /* site max width */
+  --site-max-width: 1300px;
+}
+
 body {
-  background: rebeccapurple;
-  color: white;
+  background: var(--white-color);
+  color: var(--black-color);
   min-height: 100vh;
 }
 
 /* Header */
 header {
-  text-align: center;
-  padding: 40px 20px 20px 20px;
+  background: var(--primary-color);
+  color: var(--white-color);
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .header-content {
@@ -32,57 +70,70 @@ header {
 
 .header-text {
   flex: 1;
-  text-align: left;
 }
 
 header h1 {
   font-size: 2.5rem;
   margin-bottom: 10px;
+  color: var(--white-color);
 }
 
 header p {
   font-size: 1.1rem;
-  color: #ddd;
+  color: var(--primary-color-light);
   margin-bottom: 0;
 }
 
-/* Send to Portal Button */
-.send-portal-btn {
-  background: #28a745;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 50px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
-  margin-top: 10px;
+/* Search Container */
+.search-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
 }
 
-.send-portal-btn:hover {
-  background: #218838;
-  color: white;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+#search-input {
+  padding: 10px;
+  border: 1px solid var(--primary-color-light);
+  border-radius: 5px;
+  background: var(--white-color);
+  color: var(--black-color);
+  width: 300px;
+}
+
+#search-btn {
+  background: var(--primary-color-light);
+  color: var(--white-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#search-btn:hover {
+  background: var(--dark-bg);
 }
 
 /* Profiles Container */
 .profile-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 25px;
-  padding: 20px;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* Individual Profile Card */
 .profile-card {
-  background: #3b1d5a;
+  background: var(--white-color);
   border-radius: 15px;
-  padding: 20px;
-  width: 280px;
+  padding: 25px;
   text-align: center;
   transition: 0.3s;
+  border: 2px solid #e0e0e0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .profile-card img {
@@ -97,46 +148,48 @@ header p {
 .profile-card h3 {
   font-size: 1.3rem;
   margin-bottom: 5px;
+  color: var(--black-color);
 }
 
 .profile-card p {
   font-size: 0.95rem;
-  color: #ddd;
+  color: #666;
   margin-bottom: 10px;
 }
 
 .profile-card .bio {
   font-size: 0.9rem;
   margin-bottom: 15px;
+  color: #888;
 }
 
-/* Contact Button */
-.contact-btn {
-  display: inline-block;
-  text-decoration: none;
-  color: white;
-  background: #a78bfa;
+/* Chat Button */
+.chat-btn {
+  background: var(--primary-color);
+  color: var(--white-color);
+  border: none;
   padding: 10px 20px;
   border-radius: 50px;
   font-weight: 600;
+  cursor: pointer;
   transition: 0.3s;
 }
 
-.contact-btn:hover {
-  background: #ffffff;
-  color: #3b1d5a;
+.chat-btn:hover {
+  background: var(--dark-bg);
   box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 /* Hover effect on card */
 .profile-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  border-color: var(--primary-color-light);
 }
 
 /* Case card specific styles */
 .case-card {
-  border-left: 4px solid #a78bfa;
+  border-left: 4px solid var(--secondary-color);
 }
 
 .case-header {
@@ -148,7 +201,7 @@ header p {
 
 .case-header h3 {
   margin: 0;
-  color: #a78bfa;
+  color: var(--white-color);
   font-size: 1.2rem;
 }
 
@@ -159,7 +212,7 @@ header p {
 }
 
 .case-description {
-  color: #ddd;
+  color: var(--text-color);
   margin-bottom: 15px;
   line-height: 1.4;
 }
@@ -171,12 +224,12 @@ header p {
 .case-meta p {
   margin: 5px 0;
   font-size: 0.9rem;
-  color: #ccc;
+  color: var(--text-color);
 }
 
 .accept-case-btn {
-  background: #28a745;
-  color: white;
+  background: var(--primary-color);
+  color: var(--white-color);
   border: none;
   padding: 10px 20px;
   border-radius: 50px;
@@ -188,7 +241,7 @@ header p {
 }
 
 .accept-case-btn:hover {
-  background: #218838;
+  background: var(--primary-color-dark);
   box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
@@ -205,13 +258,13 @@ header p {
 }
 
 .portal-modal-content {
-  background-color: #3b1d5a;
+  background-color: var(--primary-color);
   margin: 5% auto;
   padding: 0;
   border-radius: 15px;
   width: 90%;
   max-width: 600px;
-  color: white;
+  color: var(--white-color);
 }
 
 .portal-modal-header {
@@ -219,7 +272,7 @@ header p {
   justify-content: space-between;
   align-items: center;
   padding: 20px 30px;
-  border-bottom: 1px solid #a78bfa;
+  border-bottom: 1px solid var(--primary-color-light);
 }
 
 .portal-modal-header h2 {
@@ -231,11 +284,11 @@ header p {
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
-  color: #ddd;
+  color: var(--secondary-color);
 }
 
 .portal-modal-close:hover {
-  color: white;
+  color: var(--primary-color-light);
 }
 
 .portal-modal-body {
@@ -250,29 +303,29 @@ header p {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #ddd;
+  color: var(--text-color);
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
   padding: 12px;
-  border: 1px solid #a78bfa;
+  border: 1px solid var(--primary-color-light);
   border-radius: 8px;
-  background-color: #2e1a47;
-  color: white;
+  background-color: var(--secondary-color);
+  color: var(--white-color);
   font-size: 1rem;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #a78bfa;
-  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.3);
+  border-color: var(--primary-color-light);
+  box-shadow: 0 0 0 2px rgba(102, 51, 153, 0.3);
 }
 
 .portal-info {
-  background-color: #2e1a47;
+  background-color: var(--secondary-color);
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 25px;
@@ -281,13 +334,13 @@ header p {
 .portal-info h3 {
   margin-top: 0;
   margin-bottom: 10px;
-  color: #a78bfa;
+  color: var(--white-color);
 }
 
 .portal-info p {
   margin: 8px 0;
   font-size: 0.95rem;
-  color: #ddd;
+  color: var(--text-color);
 }
 
 .portal-actions {
@@ -317,19 +370,20 @@ header p {
 }
 
 .portal-submit-btn {
-  background-color: #a78bfa;
+  background-color: var(--secondary-color);
   color: white;
 }
 
 .portal-submit-btn:hover {
-  background-color: #ffffff;
-  color: #3b1d5a;
+  background-color: var(--white-color);
+  color: var(--primary-color);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .profile-card {
-    width: 45%;
+  .profile-container {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    padding: 20px 10px;
   }
 
   .portal-modal-content {
@@ -353,7 +407,7 @@ header p {
 }
 
 @media (max-width: 480px) {
-  .profile-card {
-    width: 90%;
+  .profile-container {
+    grid-template-columns: 1fr;
   }
 }

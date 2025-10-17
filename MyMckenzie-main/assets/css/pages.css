@@ -1,8 +1,20 @@
+:root {
+  --primary-color: rebeccapurple;
+  --primary-color-light: #a78bfa;
+  --white-color: #ffffff;
+  --dark-bg: #2e1a47;
+  --black-color: #000000;
+  --input-bg: #222;
+  --border-radius-m: 20px;
+  --font-size-l: 1rem;
+  --font-size-xl: 1.2rem;
+}
+
 /* Page-specific components (chat history, messages) */
 .chat-container {
   max-width: 900px;
   margin: 120px auto 40px;
-  background: linear-gradient(180deg, rgba(39,4,39,0.85), rgba(28,26,66,0.95));
+  background: linear-gradient(180deg, rgba(46,26,71,0.85), rgba(102,51,153,0.95));
   padding: 24px;
   border-radius: 12px;
   color: var(--white-color);
@@ -24,8 +36,8 @@
 }
 .chat-bubble.user {
   align-self: flex-end;
-  background: var(--primary-color-light);
-  color: var(--black-color);
+  background: var(--primary-color);
+  color: var(--white-color);
 }
 .chat-bubble.bot {
   align-self: flex-start;
@@ -47,8 +59,8 @@
 .chat-input-row button {
   padding: 10px 16px;
   border-radius: 10px;
-  background: var(--primary-color-light);
-  color: var(--black-color);
+  background: var(--primary-color);
+  color: var(--white-color);
   font-weight: var(--font-weight-bold);
 }
 
@@ -81,7 +93,7 @@
 .upload-progress .progress-bar {
   height: 100%;
   width: 0%;
-  background: var(--primary-color-light);
+  background: var(--primary-color);
   transition: width 0.25s ease;
 }
 .file-link {

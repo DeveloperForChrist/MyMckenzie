@@ -14,27 +14,44 @@
 }
 
 :root {
-  /* Color theme */
-  --primary-color: #1c1a42;
-  --secondary-color: #270427;
-  --primary-color-light: #A5B4FC;
-  --primary-color-dark: #270427;
-  --text-color: #acb5c9;
-  --background-color: #270427;
-  --border-color: #E5E7EB;
-  --white-color: #ffffff;
-  --black-color: #000000;
+  /* Primary color scheme */
+  --primary-color: #1c1a42; /* Indigo-600 */
+  --secondary-color:  #270427; /* Purple-600 */
+  --primary-color-light: #A5B4FC; /* Indigo-300 */
+  --primary-color-dark: #270427; /* Indigo-800 */
+  --text-color: #acb5c9; /* Gray-900 */
+  --background-color: #270427; /* Gray-50 */
+  --border-color: #E5E7EB; /* Gray-200 */
+  --white-color: #ffffff; /* White */
+  --black-color: #000000; /* Black */
 
-  /* Font sizes */
-  --font-size-s: 0.9rem;
-  --font-size-n: 1rem;
-  --font-size-l: 1.1rem;
-  --font-size-xl: 2rem;
-  --font-size-3xl: 3rem;
+  /* font sizes */
+  --font-size-s: 0.9rem; /* 14px */
+  --font-size-n: 1rem;   /* 16px */
+  --font-size-m: 1.12rem; /* 18px */
+  --font-size-l: 1.5rem; /* 20px */
+  --font-size-xl: 2rem; /* 32px */
+  --font-size-2xl: 2.3rem; /* 48px */
+  --font-size-3xl: 3rem; /* 64px */
+  --font-size-4xl: 3.75rem; /* 80px */
+  --font-size-5xl: 4.5rem; /* 96px */
+  --font-size-6xl: 6rem; /* 128px */
+  --font-size-7xl: 8rem; /* 144px */
+  --font-size-8xl: 9rem; /* 192px */
 
-  /* Border radius */
-  --border-radius-m: 20px;
-  --border-radius-circle: 50%;
+    /* font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --font-weight-extra-bold: 700;
+
+  /* border radius */
+  --border-radius-s: 8px; /* 2px */
+  --border-radius-m: 30px;
+  --border-radius-circle: 50%; /* 4px */
+
+  /* site max width */
+  --site-max-width: 1300px;
 }
 
 /* ===========================

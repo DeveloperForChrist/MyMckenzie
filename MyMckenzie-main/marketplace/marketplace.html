@@ -15,36 +15,39 @@
     <div class="header-content">
       <div class="header-text">
         <h1 id="page-title">McKenzie Friends Directory</h1>
-        <p id="page-description">Browse profiles and contact a McKenzie Friend for help with your case.</p>
+        <p id="page-description">Connect with trusted McKenzie Friends to guide you through your legal journey.</p>
       </div>
-      <button id="send-to-portal-btn" class="send-portal-btn">Send My Case to Portal</button>
+      <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search by name or specialty...">
+        <button id="search-btn">Search</button>
+      </div>
     </div>
   </header>
 
   <main class="profile-container">
     <!-- Example Profile Card -->
     <div class="profile-card">
-  <img src="../assets/img/profile1.jpg" alt="Jane Doe">
+      <img src="../assets/img/profile1.jpg" alt="Jane Doe">
       <h3>Jane Doe</h3>
       <p><strong>Specialties:</strong> Family Law, Civil Cases</p>
-      <p class="bio">Experienced McKenzie Friend with 5+ years helping individuals navigate UK legal processes.</p>
-      <a href="../contact/ContactMckenzie.html?friendId=jane-doe-id" class="contact-btn">Contact</a>
+      <p class="bio">Experienced McKenzie Friend with 5+ years helping individuals navigate UK legal processes. Committed to providing compassionate support and clear guidance.</p>
+      <button class="chat-btn" data-friend-id="jane-doe-id">Start Chat</button>
     </div>
 
     <div class="profile-card">
-  <img src="../assets/img/profile2.jpg" alt="John Smith">
+      <img src="../assets/img/profile2.jpg" alt="John Smith">
       <h3>John Smith</h3>
       <p><strong>Specialties:</strong> Housing Law, Tribunal Cases</p>
-      <p class="bio">Skilled in assisting litigants in person with practical case management guidance.</p>
-      <a href="../contact/ContactMckenzie.html?friendId=john-smith-id" class="contact-btn">Contact</a>
+      <p class="bio">Skilled in assisting litigants in person with practical case management guidance. Focused on empowering you with knowledge and confidence.</p>
+      <button class="chat-btn" data-friend-id="john-smith-id">Start Chat</button>
     </div>
 
     <div class="profile-card">
-  <img src="../assets/img/profile3.jpg" alt="Emily Clark">
+      <img src="../assets/img/profile3.jpg" alt="Emily Clark">
       <h3>Emily Clark</h3>
       <p><strong>Specialties:</strong> Employment Law, Civil Litigation</p>
-      <p class="bio">Passionate about providing support to those representing themselves in courts.</p>
-      <a href="../contact/ContactMckenzie.html?friendId=emily-clark-id" class="contact-btn">Contact</a>
+      <p class="bio">Passionate about providing support to those representing themselves in courts. Dedicated to helping you understand and navigate complex legal matters.</p>
+      <button class="chat-btn" data-friend-id="emily-clark-id">Start Chat</button>
     </div>
 
     <!-- Add more cards as needed -->

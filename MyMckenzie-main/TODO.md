@@ -1,16 +1,25 @@
-# TODO: Delete Account Functionality
+# TODO: Redesign Whole Web App with 60% Purple, 30% White, 10% Black Theme
 
-## Completed
-- [x] Add delete button to friend settings page (mckenzie-setting.html)
-- [x] Update settings.js to fully delete user data from Firestore (deleteDoc instead of updateDoc)
-- [x] Add profile picture deletion from Firebase Storage
-- [x] Ensure sign out after deletion
-- [x] Add proper IDs to form fields in mckenzie-setting.html for JS functionality
-- [x] Include settings.js script in mckenzie-setting.html
+## Overview
+Redesign the entire web app with 60% purple, 30% white, 10% black theme. Index and chatbot pages should be purple throughout. Standardize :root variables across all CSS files to match style.css theme.
 
-## Pending Testing
-- [ ] Test delete account on user settings page (settings.html)
-- [ ] Test delete account on friend settings page (mckenzie-setting.html)
-- [ ] Verify complete data removal (Firestore document, Storage files, Auth user)
-- [ ] Confirm logout and redirect to signin page
-- [ ] Test error handling (e.g., if Storage deletion fails)
+## Steps
+- [x] Update all CSS files :root variables to match style.css
+- [ ] Adjust styles in each CSS file for 60% purple backgrounds, 30% white text, 10% black accents
+- [ ] Special: Make index (style.css) and chatbot (chatbot.css) purple throughout
+- [x] Update signin.css styles
+- [x] Update user-signup.css :root variables and styles
+- [x] Update Friend-Signup.css styles
+- [x] Update billing.css styles
+- [x] Update bill-mckenzie.css styles
+- [x] Update Contact.css styles
+- [ ] Update ContactMckenzie.css styles
+- [x] Update join.css styles
+- [x] Update JoinMckenzie.css styles
+- [x] Update marketplace.css styles (replaced traditional marketplace with McKenzie Friends directory: list of profiles with bio, search feature, chat buttons)
+- [x] Update mckenzie-setting.css styles
+- [x] Update settings.css styles
+- [x] Update pages.css styles
+- [x] Update friend-Dashboard.css styles (added missing :root variables for consistency)
+- [x] Test all pages locally on port 8080 (server running on http://0.0.0.0:8080/)
+- [ ] Address chatbot error if needed (backend issue: "⚠️ The service is overloaded or unavailable. Please try again in a minute." - separate backend issue, not addressed in this redesign task)

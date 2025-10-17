@@ -13,19 +13,56 @@
   font-family: 'DM Sans', sans-serif;
 }
 
+:root {
+  --primary-color: rebeccapurple;
+  --primary-color-light: #a78bfa;
+  --white-color: #ffffff;
+  --dark-bg: #2e1a47;
+  --black-color: #000000;
+
+  /* font sizes */
+  --font-size-s: 0.9rem; /* 14px */
+  --font-size-n: 1rem;   /* 16px */
+  --font-size-m: 1.12rem; /* 18px */
+  --font-size-l: 1.5rem; /* 20px */
+  --font-size-xl: 2rem; /* 32px */
+  --font-size-2xl: 2.3rem; /* 48px */
+  --font-size-3xl: 3rem; /* 64px */
+  --font-size-4xl: 3.75rem; /* 80px */
+  --font-size-5xl: 4.5rem; /* 96px */
+  --font-size-6xl: 6rem; /* 128px */
+  --font-size-7xl: 8rem; /* 144px */
+  --font-size-8xl: 9rem; /* 192px */
+
+    /* font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  --font-weight-extra-bold: 700;
+
+  /* border radius */
+  --border-radius-s: 8px; /* 2px */
+  --border-radius-m: 30px;
+  --border-radius-circle: 50%; /* 4px */
+
+  /* site max width */
+  --site-max-width: 1300px;
+}
+
 body {
-  background: #f8f9fc;
+  background: var(--dark-bg);
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  color: var(--white-color);
 }
 
 /* ===========================
    Container
 =========================== */
 .billing-container {
-  background: white;
+  background: var(--primary-color);
   padding: 40px 30px;
   border-radius: 15px;
   width: 90%;
@@ -37,14 +74,14 @@ body {
    Form Title
 =========================== */
 .billing-container h1 {
-  color: #3b1d5a;
+  color: var(--white-color);
   font-size: 28px;
   margin-bottom: 10px;
   text-align: center;
 }
 
 .billing-container p.desc {
-  color: #666;
+  color: var(--primary-color-light);
   font-size: 14px;
   margin-bottom: 30px;
   text-align: center;
@@ -62,7 +99,7 @@ body {
 .form-group label {
   font-weight: 600;
   margin-bottom: 6px;
-  color: #3b1d5a;
+  color: var(--white-color);
 }
 
 .form-group input,
@@ -72,13 +109,14 @@ body {
   border-radius: 8px;
   font-size: 14px;
   color: #333;
+  background: var(--white-color);
   outline: none;
   transition: border 0.3s ease;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-  border-color: #7c3aed;
+  border-color: var(--primary-color);
 }
 
 /* ===========================
@@ -93,8 +131,8 @@ body {
    Submit Button
 =========================== */
 .submit-btn {
-  background: #7c3aed;
-  color: white;
+  background: var(--primary-color);
+  color: var(--white-color);
   border: none;
   padding: 12px 20px;
   border-radius: 10px;
@@ -105,7 +143,7 @@ body {
 }
 
 .submit-btn:hover {
-  background: #5b21b6;
+  background: var(--dark-bg);
 }
 
 /* ===========================

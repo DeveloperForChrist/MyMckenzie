@@ -167,9 +167,9 @@ const uploadAttachment = async (file) => {
   // --- Gemini API config ---
   const API_KEY = "AIzaSyArGnZbyf9Ot3N4mo85VT8K0shIrGDyJB8";
   const GEM_MODELS = [
-    "gemini-2.5-flash-lite",
     "gemini-1.5-flash",
-    "gemini-1.5-pro"
+    "gemini-1.5-pro",
+    "gemini-2.0-flash-exp"
   ];
   const makeApiUrl = (model) =>
     API_KEY
@@ -700,11 +700,11 @@ OPTIONAL ADVANCED FEATURES:
           const data = await response.json();
           if (!response.ok) {
             const msg = data?.error?.message || `HTTP ${response.status}`;
-            const overloaded = response.status === 429 || response.status === 503 || /overload|busy|try again later/i.test(msg);
-            if (overloaded && attempt < MAX_RETRIES) {
-              await sleep(400 * Math.pow(2, attempt));
-              continue; // retry same model
-            }
+          const overloaded = response.status === 429 || response.status === 503 || /overload|busy|try again later|resource exhausted/i.test(msg);
+          if (overloaded && attempt < MAX_RETRIES) {
+            await sleep(1000 * Math.pow(2, attempt)); // increased delay
+            continue; // retry same model
+          }
             lastErr = new Error(msg);
             if (overloaded) break; // try next model
             throw lastErr; // non-overload error: bail out
@@ -737,7 +737,7 @@ OPTIONAL ADVANCED FEATURES:
 
     // Final failure
     if (botDiv && botDiv.querySelector(".message-text")) {
-      botDiv.querySelector(".message-text").textContent = "⚠️ The service is overloaded or unavailable. Please try again in a minute.";
+      botDiv.querySelector(".message-text").textContent = "⚠️ The service is overloaded or unavailable. Please try again in a few minutes.";
     }
     console.error("Gemini Error:", lastErr);
     scrollToBottom();

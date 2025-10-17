@@ -13,10 +13,22 @@
   font-family: "DM Sans", sans-serif;
 }
 
+:root {
+  --primary-color: rebeccapurple;
+  --primary-color-light: #a78bfa;
+  --white-color: #ffffff;
+  --dark-bg: #2e1a47;
+  --black-color: #000000;
+  --input-bg: #222;
+  --border-radius-m: 20px;
+  --font-size-l: 1rem;
+  --font-size-xl: 1.2rem;
+}
+
 html, body {
   height: 100%;
-  background: rebeccapurple; /* full purple background */
-  color: white;
+  background: var(--dark-bg);
+  color: var(--white-color);
 }
 
 /* ===========================
@@ -26,7 +38,7 @@ html, body {
   width: 90%;
   max-width: 1000px;
   margin: 50px auto;
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--primary-color);
   border-radius: 15px;
   padding: 40px;
   backdrop-filter: blur(8px);
@@ -105,9 +117,9 @@ label {
 input, textarea {
   padding: 10px;
   border-radius: 8px;
-  border: none;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  border: 1px solid #ccc;
+  background: var(--white-color);
+  color: #333;
   font-size: 0.95rem;
   outline: none;
   transition: 0.3s;
@@ -115,18 +127,18 @@ input, textarea {
 
 input::placeholder,
 textarea::placeholder {
-  color: #ddd;
+  color: #aaa;
 }
 
 input:focus,
 textarea:focus {
-  background: rgba(255, 255, 255, 0.3);
+  border-color: var(--primary-color);
 }
 
 /* Submit Button */
 .btn {
-  background: white;
-  color: rebeccapurple;
+  background: var(--primary-color);
+  color: var(--white-color);
   font-weight: 600;
   border: none;
   border-radius: 10px;
@@ -136,8 +148,7 @@ textarea:focus {
 }
 
 .btn:hover {
-  background: #c3b3ff;
-  color: black;
+  background: var(--dark-bg);
 }
 
 /* ===========================
