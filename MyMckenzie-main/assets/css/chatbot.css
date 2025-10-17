@@ -65,7 +65,7 @@ header {
 }
 
 .navbar.logged-in {
-  background: var(--primary-color);
+  background: var(--primary-color-dark);
 }
 
 .nav-logo {
@@ -183,9 +183,7 @@ header .navbar {
   width: 100%;
   left: 0;
   z-index: 1000;
-  background-color: rgba(39, 4, 39, 0.75); /* translucent for blur */
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  background-color: var(--primary-color-dark); /* solid purple */
   transition: box-shadow 0.3s ease;
 }
 
